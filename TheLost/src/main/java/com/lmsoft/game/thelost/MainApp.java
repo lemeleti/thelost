@@ -1,12 +1,36 @@
 package com.lmsoft.game.thelost;
 
+import javafx.application.Application;
+import javafx.stage.Stage;
+
 /**
  * Main class
  * 
- * @author C110426
+ * @author Leandro Meleti
  * @date created on 02.12.2016
  */
-public class MainApp {
+public class MainApp extends Application {
+
+	private Stage primaryStage;
+
+	/*
+	 * (non-Javadoc)
+	 * @see javafx.application.Application#start(javafx.stage.Stage)
+	 */
+	@Override
+	public void start(Stage primaryStage) throws Exception {
+		this.primaryStage = primaryStage;
+
+		showMainView();
+	}
+
+	private void showMainView() {
+
+	}
+
+	private void showPlayView() {
+
+	}
 
 	/**
 	 * launch method
@@ -14,7 +38,7 @@ public class MainApp {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
+		launch(args);
 	}
 
 }
