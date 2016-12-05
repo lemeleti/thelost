@@ -18,9 +18,9 @@ public class Room {
 
 	private Map<String, Room> exits;
 
-	private String item;
+	private ItemEnum itemObject;
 
-	private String obstacle;
+	private ObstacleEnum obstacleObject;
 
 	/**
 	 * Default constructor. <br/>
@@ -35,11 +35,11 @@ public class Room {
 	 * @param obstacle
 	 *            is a {@link String} and describes
 	 */
-	public Room(String description, String item, String obstacle) {
+	public Room(String description, ItemEnum item, ObstacleEnum obstacle) {
 		super();
 		this.description = description;
-		this.item = item;
-		this.obstacle = obstacle;
+		this.itemObject = item;
+		this.obstacleObject = obstacle;
 		exits = new HashMap<>();
 	}
 
@@ -89,6 +89,20 @@ public class Room {
 	/**
 	 * Getter - Method
 	 * 
+	 * @return exit
+	 */
+	public Room getExit(String directionString) {
+		try {
+			DirectionEnum direction = DirectionEnum.valueOf(directionString);
+			return exits.get(direction);
+		} catch (IllegalArgumentException e) {
+			return null;
+		}
+	}
+
+	/**
+	 * Getter - Method
+	 * 
 	 * @return description
 	 */
 	public String getDescription() {
@@ -100,8 +114,8 @@ public class Room {
 	 * 
 	 * @return item
 	 */
-	public String getItem() {
-		return item;
+	public ItemEnum getItemObject() {
+		return itemObject;
 	}
 
 	/**
@@ -109,8 +123,8 @@ public class Room {
 	 * 
 	 * @param item
 	 */
-	public void setItem(String item) {
-		this.item = item;
+	public void setItemObject(ItemEnum item) {
+		this.itemObject = item;
 	}
 
 	/**
@@ -118,8 +132,8 @@ public class Room {
 	 * 
 	 * @return item
 	 */
-	public String obstacle() {
-		return obstacle;
+	public ObstacleEnum getObstacleObject() {
+		return obstacleObject;
 	}
 
 	/**
@@ -127,8 +141,8 @@ public class Room {
 	 * 
 	 * @param obstacle
 	 */
-	public void setobstacle(String obstacle) {
-		this.obstacle = obstacle;
+	public void setObstacleObject(ObstacleEnum obstacle) {
+		this.obstacleObject = obstacle;
 	}
 
 }

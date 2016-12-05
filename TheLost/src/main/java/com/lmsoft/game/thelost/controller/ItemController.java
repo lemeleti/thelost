@@ -13,7 +13,7 @@ import com.lmsoft.game.thelost.model.ItemEnum;
  */
 public class ItemController {
 
-	private Map<String, Boolean> items;
+	private Map<ItemEnum, Boolean> items;
 
 	/**
 	 * Default constructor.<br/>
@@ -30,7 +30,7 @@ public class ItemController {
 	 *            {@link String}
 	 */
 	public void addItem(ItemEnum item) {
-		items.put(item.getItem(), false);
+		items.put(item, false);
 	}
 
 	/**
@@ -40,7 +40,7 @@ public class ItemController {
 	 *            {@link String}
 	 */
 	public void setItemFound(ItemEnum item) {
-		items.put(item.getItem(), true);
+		items.put(item, true);
 	}
 
 	/**
@@ -51,9 +51,9 @@ public class ItemController {
 	public String getItemsAsString() {
 		String result = "";
 
-		for (Object o : items.keySet().toArray()) {
-			if (items.get(o)) {
-				result = String.format("%s, %s", o, result);
+		for (Map.Entry<ItemEnum, Boolean> entry : items.entrySet()) {
+			if (entry.getValue()) {
+				result = String.format("%s, %s", entry.getKey().getItem(), result);
 			}
 		}
 

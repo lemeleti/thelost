@@ -13,7 +13,7 @@ import com.lmsoft.game.thelost.model.ObstacleEnum;
  */
 public class ObstacleController {
 
-	private Map<String, Boolean> obstacles;
+	private Map<ObstacleEnum, Boolean> obstacles;
 
 	/**
 	 * Default constructor.<br/>
@@ -30,7 +30,7 @@ public class ObstacleController {
 	 *            {@link String}
 	 */
 	public void addObstacle(ObstacleEnum obstacle) {
-		obstacles.put(obstacle.getObstacle(), false);
+		obstacles.put(obstacle, false);
 	}
 
 	/**
@@ -40,7 +40,7 @@ public class ObstacleController {
 	 *            {@link String}
 	 */
 	public void setObstacleFound(ObstacleEnum obstacle) {
-		obstacles.put(obstacle.getObstacle(), true);
+		obstacles.put(obstacle, true);
 	}
 
 	/**
@@ -51,9 +51,9 @@ public class ObstacleController {
 	public String getObstaclesAsString() {
 		String result = "";
 
-		for (Object o : obstacles.keySet().toArray()) {
-			if (obstacles.get(o)) {
-				result = String.format("%s, %s", o, result);
+		for (Map.Entry<ObstacleEnum, Boolean> entry : obstacles.entrySet()) {
+			if (entry.getValue()) {
+				result = String.format("%s, %s", entry.getKey().getObstacle(), result);
 			}
 		}
 
