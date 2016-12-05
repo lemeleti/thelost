@@ -8,15 +8,15 @@ package com.lmsoft.game.thelost.model;
  */
 public enum ObstacleEnum {
 
-	NOTHING("nothing", "nothing"),
+	NONE("none", "\nnone"),
 
-	MONSTER("Monster", "You need a sword to defeat it!"),
+	MONSTER("Monster", "\nYou need a sword to defeat it!"),
 
-	POKEMON("Pokemon", "Find Pikachu! He will help you.."),
+	WILD_POKEMON("Pokemon", "\nFind Pikachu! He will help you.."),
 
-	DOOR("Closed door", "Find the key!"),
+	CLOSED_DOOR("Closed door", "\nFind the key!"),
 
-	ANGRY_DOG("Angry dog", "Find a bone!");
+	ANGRY_DOG("Angry dog", "\nFind a bone!");
 
 	private final String obstacle;
 

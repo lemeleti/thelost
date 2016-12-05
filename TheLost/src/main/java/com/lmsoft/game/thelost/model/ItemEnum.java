@@ -8,7 +8,7 @@ package com.lmsoft.game.thelost.model;
  */
 public enum ItemEnum {
 
-	NOTHING("nothing"),
+	NONE("none"),
 
 	SWORD("Sword"),
 

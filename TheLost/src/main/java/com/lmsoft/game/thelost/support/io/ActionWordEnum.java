@@ -14,6 +14,8 @@ public enum ActionWordEnum {
 
 	GO("go"),
 
+	QUIT("quit"),
+
 	USE("use"),
 
 	SEARCH_ITEM("searchitem"),
