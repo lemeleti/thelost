@@ -7,13 +7,16 @@ import static com.lmsoft.game.thelost.model.DirectionEnum.SOUTH;
 import static com.lmsoft.game.thelost.model.DirectionEnum.UP;
 import static com.lmsoft.game.thelost.model.DirectionEnum.WEST;
 
+import com.lmsoft.game.thelost.controller.GameViewController;
 import com.lmsoft.game.thelost.controller.ItemController;
 import com.lmsoft.game.thelost.controller.ObstacleController;
 import com.lmsoft.game.thelost.model.ItemEnum;
 import com.lmsoft.game.thelost.model.ObstacleEnum;
 import com.lmsoft.game.thelost.model.Room;
 import com.lmsoft.game.thelost.support.io.ActionWordEnum;
+import com.lmsoft.game.thelost.support.io.ActionWordHelper;
 import com.lmsoft.game.thelost.support.io.Command;
+import com.lmsoft.game.thelost.support.io.CommandParser;
 
 /**
  * 
@@ -22,6 +25,8 @@ import com.lmsoft.game.thelost.support.io.Command;
  * @date created on 05.12.2016
  */
 public class Game {
+
+	private GameViewController guiController;
 
 	private ItemController itemController;
 
@@ -40,7 +45,9 @@ public class Game {
 	/**
 	 * Default constructor
 	 */
-	public Game() {
+	public Game(GameViewController guiController) {
+		this.guiController = guiController;
+
 		itemController = new ItemController();
 		obstacleController = new ObstacleController();
 
@@ -48,43 +55,48 @@ public class Game {
 	}
 
 	public Thread play = new Thread(() -> {
+		CommandParser parser = new CommandParser(guiController);
+
 		printWelcome();
 
 		boolean finished = false;
-
 		while (!finished) {
-			// if (finished) {
-			// Command command;
-			// finished = processCommand(command);
-			//
-			// }
+			if ("enter".equals(guiController.getTxtEnterHelper())) {
+				finished = processCommand(parser.getCommand());
+				guiController.setTxtEnterHelperDefault();
+			}
 		}
-
-		// TODO: end game
+		guiController.appendConsoleText("\nThanks for playing.");
+		guiController.gameEnd();
 	});
 
 	private void printWelcome() {
-		// TODO: Output welcome text
+		guiController.appendConsoleText("Welcome to The Lost!");
+		guiController.appendConsoleText("\nYou're in a high-rise building. Recently, a terrorist group");
+		guiController.appendConsoleText("\nbombed the building. Try to find the exit. You will encounter challenges ");
+		guiController.appendConsoleText("\n'cause the great magician Piranavan has enchanted the whole building.");
+		guiController.appendConsoleText("\nTry to escape! Good Luck :D");
+		guiController.appendConsoleText("\n\nType help for information\n\n");
+		guiController.appendConsoleText(currentRoom.getLongDescription());
 	}
 
 	private void look() {
-		// TODO: Output room long description
+		guiController.appendConsoleText(String.format("\n%s", currentRoom.getLongDescription()));
 	}
 
 	/*
 	 * Lists all items the player found
 	 */
 	private void listItem() {
-		// TODO: list items
-		// return String.format("You've got these items: %s",
-		// itemController.getItemsAsString());
+		guiController.appendConsoleText(String.format("You've got these items: %s", itemController.getItemsAsString()));
 	}
 
 	/*
 	 * Lists all valid action words
 	 */
 	private void printHelp() {
-		// TODO: Output list valid commands
+		guiController.appendConsoleText(
+				String.format("\nYou got these commands:\n%s", ActionWordHelper.getAllValidActionWords()));
 	}
 
 	/*
@@ -92,7 +104,7 @@ public class Game {
 	 */
 	private boolean quit(Command command) {
 		if (command.hasSecondWord()) {
-			// TODO: Output quit what?
+			guiController.appendConsoleText("\nQuit what?");
 			return false;
 		} else {
 			return true;
@@ -104,55 +116,57 @@ public class Game {
 	 */
 	private void use(Command command) {
 		if (!command.hasSecondWord()) {
-			// TODO: use What?
+			guiController.appendConsoleText("\nUse what?");
 			return;
 		}
 
 		String itemString = command.getSecondWord();
 
-		switch (nextRoom.getObstacleObject()) {
+		ObstacleEnum obstacle = nextRoom.getObstacleObject();
+
+		switch (obstacle) {
 			case MONSTER:
 				if (itemString.equalsIgnoreCase(ItemEnum.SWORD.getItem())) {
-					// TODO: output defeated
-					overcomeObstacle();
+					guiController.appendConsoleText("\nYou've defeat the monster!");
+					overcomeObstacle(obstacle);
 				} else {
-					// TODO: Output need a sword
+					guiController.appendConsoleText("\nYou need a sword to defeat the monster!");
 				}
 				break;
 
 			case WILD_POKEMON:
 				if (itemString.equalsIgnoreCase(ItemEnum.PIKACHU.getItem())) {
-					// TODO: output defeated
-					overcomeObstacle();
+					guiController.appendConsoleText("\nYou've defeat the wild pokemon!");
+					overcomeObstacle(obstacle);
 				} else {
-					// TODO: Output need a pikachu
+					guiController.appendConsoleText("\nYou need Pikachu to defeat this Pokemon!");
 				}
 				break;
 
 			case ANGRY_DOG:
 				if (itemString.equalsIgnoreCase(ItemEnum.BONE.getItem())) {
-					// TODO: output defeated
-					overcomeObstacle();
+					guiController.appendConsoleText("\nYou've calmed the angry dog!");
+					overcomeObstacle(obstacle);
 				} else {
-					// TODO: Output need a bone
+					guiController.appendConsoleText("\nYou need a bone to calm the dog!");
 				}
 				break;
 
 			case CLOSED_DOOR:
 				if (itemString.equalsIgnoreCase(ItemEnum.KEY.getItem())) {
-					// TODO: output defeated
-					overcomeObstacle();
+					guiController.appendConsoleText("\nYou opened the door!");
+					overcomeObstacle(obstacle);
 				} else {
-					// TODO: Output need a key
+					guiController.appendConsoleText("\nYou need a key to open this door!");
 				}
 				break;
 
 			case NONE:
-				// TODO: Output way is free
+				guiController.appendConsoleText("\nThe way is free!");
 				break;
 
 			default:
-				// TODO: Output Nothing
+				guiController.appendConsoleText("\nThere's nothing!");
 				break;
 		}
 
@@ -161,8 +175,8 @@ public class Game {
 	/*
 	 * Logic to run when an obstacle has overcome
 	 */
-	private void overcomeObstacle() {
-		obstacleController.setObstacleFound(nextRoom.getObstacleObject());
+	private void overcomeObstacle(ObstacleEnum obstacle) {
+		obstacleController.setObstacleFound(obstacle);
 		nextRoom.setObstacleObject(ObstacleEnum.NONE);
 		currentRoom = nextRoom;
 		look();
@@ -173,44 +187,59 @@ public class Game {
 	 */
 	private void goRoom(Command command) {
 		if (!command.hasSecondWord()) {
-			// TODO: Output go where?
+			guiController.appendConsoleText("\nGo where?");
 			return;
 		}
 
 		String direction = command.getSecondWord();
 
 		nextRoom = currentRoom.getExit(direction);
+		ObstacleEnum obstacle = nextRoom.getObstacleObject();
 
-		if (nextRoom == null) {
-			// TODO: Output theres no way (wrong direction or spelling error)
+		if (nextRoom == null) { // wrong direction or spelling error
+			guiController.appendConsoleText("\nThere's no way!");
 		} else if (nextRoom == finalRoom) {
-			// TODO: Output you have won
+			printEnteredFinalRoom(false);
 		} else if (nextRoom == secretElevator) {
 			// TODO: Output question for pin
 			// TODO: check question
 		} else if (nextRoom == secretFinalRoom) {
-			// TODO: Output you have won and found the secret exit
+			printEnteredFinalRoom(true);
 		} else if (nextRoom.getObstacleObject() != ObstacleEnum.NONE) {
-			// TODO: Output can't pass room
-			// nextRoom.getObstacleObject().getObstacle();
+			guiController.appendConsoleText(
+					String.format("\nPassage impossible. Something in the way you: %s", obstacle.getObstacle()));
 
-			switch (nextRoom.getObstacleObject()) {
+			switch (obstacle) {
 				case MONSTER:
 				case WILD_POKEMON:
 				case CLOSED_DOOR:
 				case ANGRY_DOG:
-					// TODO: Output nextRoom.getObstacleObject().getSolution();
+					guiController.appendConsoleText(String.format("\n%s", obstacle.getSolution()));
 					break;
 
 				default:
-					// TODO: Output you've lost!
+					guiController.appendConsoleText("\nYou've lost!");
 					break;
 			}
 		} else {
 			// TODO: is this needed?
-			overcomeObstacle();
+			overcomeObstacle(obstacle);
 		}
 
+	}
+
+	private void printEnteredFinalRoom(boolean wasSecretFinal) {
+		guiController.appendConsoleText("\n\n************************************************************\n");
+		guiController.appendConsoleText("************************************************************\n");
+		guiController.appendConsoleText("***       You've really made it! CONGRATULATE !!         ***\n");
+		guiController.appendConsoleText("***       Unfortunately the game is over...              ***\n");
+		guiController.appendConsoleText("***       But thanks for playing                         ***\n");
+		if (wasSecretFinal) {
+			guiController.appendConsoleText("***       P.S. Nice that you have found the secret exit! ***\n");
+		}
+		guiController.appendConsoleText("************************************************************\n");
+		guiController.appendConsoleText("************************************************************\n");
+		guiController.gameEnd();
 	}
 
 	/*
@@ -220,7 +249,7 @@ public class Game {
 		boolean wantToQuit = false;
 
 		if (!command.hasActionWord()) {
-			// TODO: Output what do you mean?
+			guiController.appendConsoleText("\nI don't understand you...");
 			return false;
 		}
 
@@ -271,7 +300,8 @@ public class Game {
 
 		// EG
 		Room exit = new Room("YOU DID IT! You survived.", ItemEnum.NONE, ObstacleEnum.NONE);
-		Room reception = new Room("It is becoming brighter. You've reached the reception.", ItemEnum.NONE, ObstacleEnum.NONE);
+		Room reception = new Room("It is becoming brighter. You've reached the reception.", ItemEnum.NONE,
+				ObstacleEnum.NONE);
 		Room toilet = new Room("You are at the haunted toilet", ItemEnum.NONE, ObstacleEnum.NONE);
 		Room kiosk = new Room("You are at the kiosk!", ItemEnum.NONE, ObstacleEnum.NONE);
 		Room storageRoom = new Room("You are in the storage room", ItemEnum.NONE, ObstacleEnum.NONE);
@@ -294,7 +324,8 @@ public class Game {
 		Room corridor1 = new Room("You are in the corridor of the first floor", ItemEnum.NONE, ObstacleEnum.NONE);
 		Room office11 = new Room("You are in the office 1.1", ItemEnum.NONE, ObstacleEnum.NONE);
 		Room office12 = new Room("You are in the office 1.2", ItemEnum.NONE, ObstacleEnum.NONE);
-		Room office17 = new Room("You are in the office 1.7. Where are the rest of the office?", ItemEnum.NONE, ObstacleEnum.NONE);
+		Room office17 = new Room("You are in the office 1.7. Where are the rest of the office?", ItemEnum.NONE,
+				ObstacleEnum.NONE);
 		Room printerRoom11 = new Room("You found the printer room", ItemEnum.NONE, ObstacleEnum.NONE);
 		Room elevator = new Room("The elevator starts.", ItemEnum.NONE, ObstacleEnum.NONE);
 
@@ -349,7 +380,8 @@ public class Game {
 		Room meetingRoom31 = new Room("You are in the meeting room 3.1", ItemEnum.NONE, ObstacleEnum.NONE);
 		Room nextRoom = new Room("You are in the next room", ItemEnum.NONE, ObstacleEnum.NONE);
 		Room breakRoom32 = new Room("You are in the break room", ItemEnum.NONE, ObstacleEnum.NONE);
-		Room emergencyStairwell = new Room("You have reached the emergency stairwell", ItemEnum.NONE, ObstacleEnum.NONE);
+		Room emergencyStairwell = new Room("You have reached the emergency stairwell", ItemEnum.NONE,
+				ObstacleEnum.NONE);
 		Room serverRoom = new Room("You are in the server room", ItemEnum.NONE, ObstacleEnum.NONE);
 		Room computerRoom = new Room("You are in the computer room", ItemEnum.NONE, ObstacleEnum.CLOSED_DOOR);
 		Room secetariat = new Room("You're at the Secretariat", ItemEnum.NONE, ObstacleEnum.NONE);
@@ -430,7 +462,8 @@ public class Game {
 		Room corridor5 = new Room("You are in the corridor of the fifth floor", ItemEnum.NONE, ObstacleEnum.NONE);
 		Room office51 = new Room("You are in the office 5.1 ", ItemEnum.NONE, ObstacleEnum.NONE);
 		Room kitchen = new Room("You are in the kitchen. Sorry, NONE to eat", ItemEnum.NONE, ObstacleEnum.NONE);
-		Room foodStorageRoom = new Room("You are in the food storage. It has only rotten meat", ItemEnum.NONE, ObstacleEnum.NONE);
+		Room foodStorageRoom = new Room("You are in the food storage. It has only rotten meat", ItemEnum.NONE,
+				ObstacleEnum.NONE);
 		Room diningRoom = new Room("You are in the dining room", ItemEnum.NONE, ObstacleEnum.NONE);
 		Room managerRoom = new Room("You are in the manager room", ItemEnum.NONE, ObstacleEnum.WILD_POKEMON);
 		Room classRoom52 = new Room("You are in the classroom of apprentices", ItemEnum.NONE, ObstacleEnum.NONE);
@@ -547,9 +580,12 @@ public class Game {
 		// ninth floor
 		Room corridor9 = new Room("You are in the corridor of the ninth floor", ItemEnum.NONE, ObstacleEnum.NONE);
 		Room gameRoom = new Room("You are in a giant game room", ItemEnum.NONE, ObstacleEnum.NONE);
-		Room bigbossOffice = new Room("You are in the magnificent office from the Boss Piri", ItemEnum.NONE, ObstacleEnum.NONE);
-		Room bigbossOffice2 = new Room("You are in the magnificent office from the Big Boss Leo", ItemEnum.NONE, ObstacleEnum.NONE);
-		Room kebabShop = new Room("You are in the kebab shop.\n Unfortunately, it has only Falaffel", ItemEnum.NONE, ObstacleEnum.NONE);
+		Room bigbossOffice = new Room("You are in the magnificent office from the Boss Piri", ItemEnum.NONE,
+				ObstacleEnum.NONE);
+		Room bigbossOffice2 = new Room("You are in the magnificent office from the Big Boss Leo", ItemEnum.NONE,
+				ObstacleEnum.NONE);
+		Room kebabShop = new Room("You are in the kebab shop.\n Unfortunately, it has only Falaffel", ItemEnum.NONE,
+				ObstacleEnum.NONE);
 		Room homeTheater = new Room("You are in a huge home theater", ItemEnum.NONE, ObstacleEnum.NONE);
 		Room chilllounge = new Room("You are in the Chill Lounge", ItemEnum.NONE, ObstacleEnum.NONE);
 
