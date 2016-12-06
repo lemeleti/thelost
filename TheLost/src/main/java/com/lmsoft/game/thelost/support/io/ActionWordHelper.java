@@ -38,10 +38,12 @@ public class ActionWordHelper {
 	public static boolean isActionCommand(String actionWord) {
 		boolean result = false;
 
-		for (ActionWordEnum aw : ActionWordEnum.values()) {
-			if (actionWord.equals(aw.getActionWord())) {
-				result = true;
-				break;
+		if (actionWord != null) {
+			for (ActionWordEnum aw : ActionWordEnum.values()) {
+				if (actionWord.equalsIgnoreCase(aw.getActionWord())) {
+					result = true;
+					break;
+				}
 			}
 		}
 

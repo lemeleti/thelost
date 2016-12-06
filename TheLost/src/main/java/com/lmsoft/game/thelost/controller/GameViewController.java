@@ -1,10 +1,12 @@
 package com.lmsoft.game.thelost.controller;
 
+import com.lmsoft.game.thelost.Game;
+import com.lmsoft.game.thelost.support.io.CommandParser;
+
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.text.Text;
 
 /**
  * View controller
@@ -23,14 +25,31 @@ public class GameViewController {
 	@FXML
 	private Button btnEnter;
 
-	@FXML
-	private Text txtEnterHelper;
+	private Game game;
+
+	private CommandParser parser;
+
+	public void startGame() {
+		parser = new CommandParser(this);
+
+		game = new Game(this);
+		game.play();
+	}
 
 	@FXML
 	private void handleEnter() {
-		taConsole.appendText(String.format("\n%s\n", tfCommand.getText()));
-		tfCommand.setText("");
-		txtEnterHelper.setText("enter");
+		taConsole.appendText(String.format("\n%s", tfCommand.getText()));
+
+		boolean finished = game.processCommand(parser.getCommand());
+		if (finished) {
+			appendConsoleText("\nThanks for playing.");
+			gameEnd();
+		} else {
+			tfCommand.setText("");
+		}
+
+		// this will scroll to the bottom
+		taConsole.setScrollTop(Double.MAX_VALUE);
 	}
 
 	public void gameEnd() {
@@ -44,14 +63,6 @@ public class GameViewController {
 
 	public String getCommandText() {
 		return tfCommand.getText();
-	}
-
-	public String getTxtEnterHelper() {
-		return txtEnterHelper.getText();
-	}
-
-	public void setTxtEnterHelperDefault() {
-		txtEnterHelper.setText("f");
 	}
 
 }

@@ -1,0 +1,6 @@
+#background {
+	-fx-background-image:
+		url('../image/avengers_wallpaper_city_background.png');
+	-fx-background-position: center;
+	-fx-background-repeat: stretch;
+}

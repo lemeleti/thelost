@@ -16,7 +16,6 @@ import com.lmsoft.game.thelost.model.Room;
 import com.lmsoft.game.thelost.support.io.ActionWordEnum;
 import com.lmsoft.game.thelost.support.io.ActionWordHelper;
 import com.lmsoft.game.thelost.support.io.Command;
-import com.lmsoft.game.thelost.support.io.CommandParser;
 
 /**
  * 
@@ -54,21 +53,9 @@ public class Game {
 		createRooms();
 	}
 
-	public Thread play = new Thread(() -> {
-		CommandParser parser = new CommandParser(guiController);
-
+	public void play() {
 		printWelcome();
-
-		boolean finished = false;
-		while (!finished) {
-			if ("enter".equals(guiController.getTxtEnterHelper())) {
-				finished = processCommand(parser.getCommand());
-				guiController.setTxtEnterHelperDefault();
-			}
-		}
-		guiController.appendConsoleText("\nThanks for playing.");
-		guiController.gameEnd();
-	});
+	}
 
 	private void printWelcome() {
 		guiController.appendConsoleText("Welcome to The Lost!");
@@ -112,6 +99,80 @@ public class Game {
 	}
 
 	/*
+	 * Prints ASCII drawing of the item or the text that there's nothing
+	 */
+	private void showItem() {
+
+		ItemEnum item = currentRoom.getItemObject();
+		if (item != ItemEnum.NONE) {
+			switch (item) {
+				case PIKACHU:
+					guiController.appendConsoleText("\n           ,     ,_");
+					guiController.appendConsoleText("\n           |`\\    `;;,            ,;;'");
+					guiController.appendConsoleText("\n           |  `\\    \\ '.        .'.'");
+					guiController.appendConsoleText("\n           |    `\\   \\  '-\"\"\"\"-' /");
+					guiController.appendConsoleText("\n           `.     `\\ /          |`");
+					guiController.appendConsoleText("\n             `>    /;   _     _ \\ ");
+					guiController.appendConsoleText("\n              /   / |       .    ;");
+					guiController.appendConsoleText("\n             <  (`\";\\ ()   ~~~  (/_");
+					guiController.appendConsoleText("\n              ';;\\  `,     __ _.-'` )");
+					guiController.appendConsoleText("\n                >;\\          `   _.'");
+					guiController.appendConsoleText("\n                `;;\\          \\-'");
+					guiController.appendConsoleText("\n                  ;/           \\ _");
+					guiController.appendConsoleText("\n                  |   ,\"\".     .` \\");
+					guiController.appendConsoleText("\n                  |      _|   '   /");
+					guiController.appendConsoleText("\n                   ;    /\")     .;-,");
+					guiController.appendConsoleText("\n                    \\    /  __   .-'");
+					guiController.appendConsoleText("\n                     \\,_/-\"`  `-'\n");
+
+					break;
+
+				case SWORD:
+					guiController.appendConsoleText("\n                           ___");
+					guiController.appendConsoleText("\n                          ( ((");
+					guiController.appendConsoleText("\n                           ) ))");
+					guiController.appendConsoleText("\n  .::.                    / /(");
+					guiController.appendConsoleText(
+							"\n '  .-;-.-.-.-.-.-.-.-/| ((::::::::::::::::::::::::::::::::::::::::::.._");
+					guiController.appendConsoleText(
+							"\n(  ( ( ( ( ( ( ( ( ( ( |  ))   -================================-      _.>");
+					guiController.appendConsoleText(
+							"\n `  `-;-`-`-`-`-`-`-`-\\| ((::::::::::::::::::::::::::::::::::::::::::''");
+					guiController.appendConsoleText("\n  `::'                    \\ \\(");
+					guiController.appendConsoleText("\n                           ) ))");
+					guiController.appendConsoleText("\n                          (_((\n");
+					break;
+
+				case KEY:
+					guiController.appendConsoleText("\n         .--.");
+					guiController.appendConsoleText("\n        /.-. '----------.");
+					guiController.appendConsoleText("\n        \\'-' .--\"--\"\"-\"-'");
+					guiController.appendConsoleText("\n         '--'\n");
+
+					break;
+
+				case BONE:
+					guiController.appendConsoleText("\n      .-.               .-.");
+					guiController.appendConsoleText("\n     (   `-._________.-'   )");
+					guiController.appendConsoleText("\n      >=     _______     =<");
+					guiController.appendConsoleText("\n     (   ,-'`       `'-,   )");
+					guiController.appendConsoleText("\n      `-'               `-'\n");
+
+					break;
+
+				default:
+					// TODO: Log not implemented
+					break;
+			}
+			guiController.appendConsoleText(String.format("\nYou found: %s", item.getItem()));
+			itemController.setItemFound(item);
+			currentRoom.setItemObject(ItemEnum.NONE);
+		} else {
+			guiController.appendConsoleText("\nThere's nothing!");
+		}
+	}
+
+	/*
 	 * Use an item for a obstacle
 	 */
 	private void use(Command command) {
@@ -121,7 +182,6 @@ public class Game {
 		}
 
 		String itemString = command.getSecondWord();
-
 		ObstacleEnum obstacle = nextRoom.getObstacleObject();
 
 		switch (obstacle) {
@@ -178,6 +238,10 @@ public class Game {
 	private void overcomeObstacle(ObstacleEnum obstacle) {
 		obstacleController.setObstacleFound(obstacle);
 		nextRoom.setObstacleObject(ObstacleEnum.NONE);
+		nextRoom();
+	}
+
+	private void nextRoom() {
 		currentRoom = nextRoom;
 		look();
 	}
@@ -194,7 +258,6 @@ public class Game {
 		String direction = command.getSecondWord();
 
 		nextRoom = currentRoom.getExit(direction);
-		ObstacleEnum obstacle = nextRoom.getObstacleObject();
 
 		if (nextRoom == null) { // wrong direction or spelling error
 			guiController.appendConsoleText("\nThere's no way!");
@@ -206,6 +269,8 @@ public class Game {
 		} else if (nextRoom == secretFinalRoom) {
 			printEnteredFinalRoom(true);
 		} else if (nextRoom.getObstacleObject() != ObstacleEnum.NONE) {
+
+			ObstacleEnum obstacle = nextRoom.getObstacleObject();
 			guiController.appendConsoleText(
 					String.format("\nPassage impossible. Something in the way you: %s", obstacle.getObstacle()));
 
@@ -222,8 +287,7 @@ public class Game {
 					break;
 			}
 		} else {
-			// TODO: is this needed?
-			overcomeObstacle(obstacle);
+			nextRoom();
 		}
 
 	}
@@ -242,10 +306,10 @@ public class Game {
 		guiController.gameEnd();
 	}
 
-	/*
+	/**
 	 * Process the command
 	 */
-	private boolean processCommand(Command command) {
+	public boolean processCommand(Command command) {
 		boolean wantToQuit = false;
 
 		if (!command.hasActionWord()) {
@@ -253,9 +317,18 @@ public class Game {
 			return false;
 		}
 
-		try {
-			String actionWordString = command.getActionWord();
-			ActionWordEnum actionWord = ActionWordEnum.valueOf(actionWordString.toLowerCase());
+		// null or valid action word
+		String actionWordString = command.getActionWord();
+
+		if (actionWordString == null) {
+			return false;
+		} else {
+
+			ActionWordEnum actionWord = ActionWordEnum.getEnumByString(actionWordString);
+			if (actionWord == null) {
+				guiController.appendConsoleText("\nI don't understand you...");
+				return false;
+			}
 
 			switch (actionWord) {
 				case HELP:
@@ -265,7 +338,7 @@ public class Game {
 					goRoom(command);
 					break;
 				case SEARCH_ITEM:
-					// TODO: showItem();
+					showItem();
 					break;
 				case SHOW_ITEMS:
 					listItem();
@@ -280,9 +353,6 @@ public class Game {
 					look();
 					break;
 			}
-		} catch (IllegalArgumentException e) {
-			// TODO: Log
-			return false;
 		}
 
 		return wantToQuit;

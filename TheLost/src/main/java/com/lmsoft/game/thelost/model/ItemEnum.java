@@ -10,13 +10,13 @@ public enum ItemEnum {
 
 	NONE("none"),
 
-	SWORD("Sword"),
+	SWORD("sword"),
 
-	PIKACHU("Pikachu"),
+	PIKACHU("pikachu"),
 
-	KEY("Key"),
+	KEY("key"),
 
-	BONE("Bone");
+	BONE("bone");
 
 	private final String item;
 

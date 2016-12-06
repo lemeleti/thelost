@@ -16,7 +16,7 @@ public class Room {
 
 	private String description;
 
-	private Map<String, Room> exits;
+	private Map<DirectionEnum, Room> exits;
 
 	private ItemEnum itemObject;
 
@@ -50,7 +50,7 @@ public class Room {
 	 * @param exits
 	 */
 	public void addExit(DirectionEnum direction, Room exit) {
-		exits.put(direction.getDirection(), exit);
+		exits.put(direction, exit);
 	}
 
 	/**
@@ -64,15 +64,15 @@ public class Room {
 
 	private String getExitsAsString() {
 		StringBuffer buffer = new StringBuffer();
-		buffer.append("Durchgänge:");
+		buffer.append("Exits:");
 
-		Set<String> key = exits.keySet();
-		for (String exit : key) {
-			buffer.append(String.format(" %s,", exit));
+		Set<DirectionEnum> key = exits.keySet();
+		for (DirectionEnum exit : key) {
+			buffer.append(String.format(" %s,", exit.getDirection()));
 		}
 
-		int lastComma = buffer.lastIndexOf(";");
-		buffer.delete(lastComma, lastComma);
+		int lastComma = buffer.lastIndexOf(",");
+		buffer.delete(lastComma, lastComma + 1);
 
 		return buffer.toString();
 	}
@@ -92,12 +92,16 @@ public class Room {
 	 * @return exit
 	 */
 	public Room getExit(String directionString) {
-		try {
-			DirectionEnum direction = DirectionEnum.valueOf(directionString);
-			return exits.get(direction);
-		} catch (IllegalArgumentException e) {
-			return null;
+
+		if (directionString != null) {
+			for (DirectionEnum direction : DirectionEnum.values()) {
+				if (directionString.equalsIgnoreCase(direction.getDirection())) {
+					return exits.get(direction);
+				}
+			}
 		}
+
+		return null;
 	}
 
 	/**

@@ -1,31 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" style="-fx-background-position: center; -fx-background-repeat: stretch; -fx-background-image: url('../images/avengers_wallpaper_city_background.png');" xmlns="http://javafx.com/javafx/8.0.102" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane fx:id="background" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="495.0" prefWidth="1000.0" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.lmsoft.game.thelost.controller.GameViewController">
    <children>
-      <ScrollPane layoutX="279.0" layoutY="100.0" prefHeight="266.0" prefWidth="424.0" AnchorPane.bottomAnchor="180.0" AnchorPane.leftAnchor="300.0" AnchorPane.rightAnchor="300.0" AnchorPane.topAnchor="150.0">
-         <content>
-            <AnchorPane prefHeight="268.0" prefWidth="398.0">
-               <children>
-                  <TextArea fx:id="taConsole" editable="false" layoutX="51.0" layoutY="23.0" prefHeight="268.0" prefWidth="398.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-               </children>
-            </AnchorPane>
-         </content>
-      </ScrollPane>
-      <TextField fx:id="tfCommand" layoutX="300.0" layoutY="395.0" prefHeight="30.0" prefWidth="300.0" AnchorPane.bottomAnchor="125.0" AnchorPane.leftAnchor="300.0" AnchorPane.rightAnchor="400.0" />
-      <Button fx:id="btnEnter" layoutX="617.0" layoutY="395.0" mnemonicParsing="false" onAction="#handleEnter" prefHeight="30.0" prefWidth="80.0" style="-fx-font-weight: bold; -fx-background-color: black; -fx-text-fill: white;" text="Enter" AnchorPane.bottomAnchor="125.0" AnchorPane.leftAnchor="620.0" AnchorPane.rightAnchor="300.0" />
-      <Text fill="WHITE" layoutX="300.0" layoutY="110.271484375" strokeType="OUTSIDE" strokeWidth="0.0" text="LOST" textAlignment="CENTER" wrappingWidth="400.0000059604645" AnchorPane.leftAnchor="300.0" AnchorPane.rightAnchor="300.0" AnchorPane.topAnchor="50.0">
+      <TextField fx:id="tfCommand" layoutX="300.0" layoutY="395.0" onAction="#handleEnter" prefHeight="31.0" prefWidth="523.0" AnchorPane.bottomAnchor="60.0" AnchorPane.leftAnchor="150.0" AnchorPane.rightAnchor="327.0" />
+      <Button fx:id="btnEnter" layoutX="705.0" layoutY="395.0" mnemonicParsing="false" onAction="#handleEnter" prefHeight="31.0" prefWidth="145.0" style="-fx-font-weight: bold; -fx-background-color: black; -fx-text-fill: white;" text="Enter" AnchorPane.bottomAnchor="60.0" AnchorPane.leftAnchor="705.0" AnchorPane.rightAnchor="150.0" />
+      <Text fill="WHITE" layoutX="300.0" layoutY="110.271484375" strokeType="OUTSIDE" strokeWidth="0.0" text="LOST" textAlignment="CENTER" wrappingWidth="500.0" AnchorPane.leftAnchor="250.0" AnchorPane.rightAnchor="250.0" AnchorPane.topAnchor="50.0">
          <font>
-            <Font name="System Bold" size="54.0" />
+            <Font name="System Bold" size="63.0" />
          </font>
       </Text>
-      <Text fx:id="txtEnterHelper" layoutX="769.0" layoutY="298.0" strokeType="OUTSIDE" strokeWidth="0.0" visible="false" />
+      <TextArea fx:id="taConsole" editable="false" layoutX="200.0" layoutY="134.0" prefHeight="250.0" prefWidth="600.0" style="-fx-font-family: 'Courier New';" AnchorPane.bottomAnchor="111.0" AnchorPane.leftAnchor="150.0" AnchorPane.rightAnchor="150.0" AnchorPane.topAnchor="134.0" />
    </children>
 </AnchorPane>

@@ -8,6 +8,7 @@ package com.lmsoft.game.thelost.support.io;
  */
 public enum ActionWordEnum {
 
+	/* !!!! ONLY LOWERCASE TEXT !!!! */
 	HELP("help"),
 
 	LOOK("look"),
@@ -29,6 +30,19 @@ public enum ActionWordEnum {
 	 */
 	private ActionWordEnum(String actionCommand) {
 		this.actionCommand = actionCommand;
+	}
+
+	public static ActionWordEnum getEnumByString(String value) {
+
+		if (value != null) {
+			for (ActionWordEnum actionWord : ActionWordEnum.values()) {
+				if (value.equalsIgnoreCase(actionWord.getActionWord())) {
+					return actionWord;
+				}
+			}
+		}
+
+		return null;
 	}
 
 	/**

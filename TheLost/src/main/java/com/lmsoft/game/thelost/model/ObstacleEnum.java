@@ -10,13 +10,13 @@ public enum ObstacleEnum {
 
 	NONE("none", "\nnone"),
 
-	MONSTER("Monster", "\nYou need a sword to defeat it!"),
+	MONSTER("monster", "\nYou need a sword to defeat it!"),
 
-	WILD_POKEMON("Pokemon", "\nFind Pikachu! He will help you.."),
+	WILD_POKEMON("pokemon", "\nFind pikachu! He will help you.."),
 
-	CLOSED_DOOR("Closed door", "\nFind the key!"),
+	CLOSED_DOOR("closed door", "\nFind the key!"),
 
-	ANGRY_DOG("Angry dog", "\nFind a bone!");
+	ANGRY_DOG("angry dog", "\nFind a bone!");
 
 	private final String obstacle;
 

@@ -1,5 +1,7 @@
 package com.lmsoft.game.thelost.support.io;
 
+import java.util.StringTokenizer;
+
 import com.lmsoft.game.thelost.controller.GameViewController;
 
 /**
@@ -30,12 +32,29 @@ public class CommandParser {
 	 */
 	public Command getCommand() {
 		String inputLine = gameController.getCommandText();
-		String[] words = inputLine.split(" ");
+		String actionWord = null;
+		String secondWord = null;
 
-		if (ActionWordHelper.isActionCommand(words[0])) {
-			return new Command(words[0], words[1]);
+		StringTokenizer tokenizer = new StringTokenizer(inputLine);
+
+		if (tokenizer.hasMoreTokens()) {
+			actionWord = tokenizer.nextToken(); // get first word
+		}
+
+		if (tokenizer.hasMoreTokens()) {
+			secondWord = tokenizer.nextToken(); // get second word
+		}
+
+		/*
+		 * Check if the first word is a valid action command. If it's valid
+		 * create a command object with the first and second word. If it's
+		 * invalid create a command object with the second word. For the first
+		 * word we take null for unknown command.
+		 */
+		if (ActionWordHelper.isActionCommand(actionWord)) {
+			return new Command(actionWord, secondWord);
 		} else {
-			return new Command(null, words[1]);
+			return new Command(null, secondWord);
 		}
 	}
 
