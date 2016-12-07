@@ -63,8 +63,8 @@ public class Game {
 		guiController.appendConsoleText("\nbombed the building. Try to find the exit. You will encounter challenges ");
 		guiController.appendConsoleText("\n'cause the great magician Piranavan has enchanted the whole building.");
 		guiController.appendConsoleText("\nTry to escape! Good Luck :D");
-		guiController.appendConsoleText("\n\nType help for information\n\n");
-		guiController.appendConsoleText(currentRoom.getLongDescription());
+		guiController.appendConsoleText("\n\nType help for information\n");
+		look();
 	}
 
 	private void look() {
@@ -264,8 +264,21 @@ public class Game {
 		} else if (nextRoom == finalRoom) {
 			printEnteredFinalRoom(false);
 		} else if (nextRoom == secretElevator) {
-			// TODO: Output question for pin
-			// TODO: check question
+			guiController.appendConsoleText("\nOn which floor the game has started? ");
+			guiController.appendConsoleText("\nYou only have one chance! Otherwise, the building explodes");
+			guiController.appendConsoleText("\nand you lose the game! Good luck :)");
+			boolean result = checkPin();
+			if (result) {
+				guiController.appendConsoleText("\nThe elevator works!");
+				if (nextRoom == null) {
+					guiController.appendConsoleText("\nThere's no way!");
+				} else {
+					currentRoom = nextRoom;
+					look();
+				}
+			} else {
+				loseGame();
+			}
 		} else if (nextRoom == secretFinalRoom) {
 			printEnteredFinalRoom(true);
 		} else if (nextRoom.getObstacleObject() != ObstacleEnum.NONE) {
@@ -283,13 +296,26 @@ public class Game {
 					break;
 
 				default:
-					guiController.appendConsoleText("\nYou've lost!");
+					loseGame();
 					break;
 			}
 		} else {
 			nextRoom();
 		}
 
+	}
+
+	private boolean checkPin() {
+		return "9".equals(guiController.getPin().trim());
+	}
+
+	private void loseGame() {
+		guiController.appendConsoleText("\n\n************************************************************\n");
+		guiController.appendConsoleText("************************************************************\n");
+		guiController.appendConsoleText("***              Y O U ' V E      L O S T !              ***\n");
+		guiController.appendConsoleText("************************************************************\n");
+		guiController.appendConsoleText("************************************************************\n");
+		guiController.gameEnd();
 	}
 
 	private void printEnteredFinalRoom(boolean wasSecretFinal) {

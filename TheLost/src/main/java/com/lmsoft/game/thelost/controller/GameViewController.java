@@ -1,5 +1,7 @@
 package com.lmsoft.game.thelost.controller;
 
+import java.util.Optional;
+
 import com.lmsoft.game.thelost.Game;
 import com.lmsoft.game.thelost.support.io.CommandParser;
 
@@ -7,6 +9,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextInputDialog;
 
 /**
  * View controller
@@ -50,6 +53,17 @@ public class GameViewController {
 
 		// this will scroll to the bottom
 		taConsole.setScrollTop(Double.MAX_VALUE);
+	}
+
+	public String getPin() {
+		TextInputDialog dialog = new TextInputDialog();
+		dialog.setTitle("Secret Elevator Pin");
+		dialog.setHeaderText("On which floor did you start?");
+		dialog.setContentText("Pin:");
+		dialog.setResizable(false);
+
+		Optional<String> result = dialog.showAndWait();
+		return (result.isPresent()) ? result.get() : "";
 	}
 
 	public void gameEnd() {
