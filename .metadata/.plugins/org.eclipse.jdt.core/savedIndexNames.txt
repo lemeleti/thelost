@@ -1,3 +1,0 @@
-INDEX VERSION 1.129+D:\_Develope\Git\git-repos\thelost\.metadata\.plugins\org.eclipse.jdt.core
-3082400079.index
-1294244358.index
