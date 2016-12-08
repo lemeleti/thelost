@@ -323,7 +323,6 @@ public class Game {
 		guiController.appendConsoleText("************************************************************\n");
 		guiController.appendConsoleText("***       You've really made it! CONGRATULATE !!         ***\n");
 		guiController.appendConsoleText("***       Unfortunately the game is over...              ***\n");
-		guiController.appendConsoleText("***       But thanks for playing                         ***\n");
 		if (wasSecretFinal) {
 			guiController.appendConsoleText("***       P.S. Nice that you have found the secret exit! ***\n");
 		}

@@ -32,6 +32,9 @@ public class GameViewController {
 
 	private CommandParser parser;
 
+	/**
+	 * Do some inits and start the game
+	 */
 	public void startGame() {
 		parser = new CommandParser(this);
 
@@ -50,11 +53,40 @@ public class GameViewController {
 		} else {
 			tfCommand.setText("");
 		}
-
-		// this will scroll to the bottom
-		taConsole.setScrollTop(Double.MAX_VALUE);
 	}
 
+	/**
+	 * End the game
+	 */
+	public void gameEnd() {
+		btnEnter.setVisible(false);
+		tfCommand.setVisible(false);
+	}
+
+	/**
+	 * Append - Method
+	 * 
+	 * @param text
+	 *            {@link String}
+	 */
+	public void appendConsoleText(String text) {
+		taConsole.appendText(String.format("%s", text));
+	}
+
+	/**
+	 * Getter - Method
+	 * 
+	 * @return commad {@link String}
+	 */
+	public String getCommandText() {
+		return tfCommand.getText();
+	}
+
+	/**
+	 * Getter - Method
+	 * 
+	 * @return pin {@link String}
+	 */
 	public String getPin() {
 		TextInputDialog dialog = new TextInputDialog();
 		dialog.setTitle("Secret Elevator Pin");
@@ -64,19 +96,6 @@ public class GameViewController {
 
 		Optional<String> result = dialog.showAndWait();
 		return (result.isPresent()) ? result.get() : "";
-	}
-
-	public void gameEnd() {
-		btnEnter.setVisible(false);
-		tfCommand.setVisible(false);
-	}
-
-	public void appendConsoleText(String text) {
-		taConsole.appendText(String.format("%s", text));
-	}
-
-	public String getCommandText() {
-		return tfCommand.getText();
 	}
 
 }
