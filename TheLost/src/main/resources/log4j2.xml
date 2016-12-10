@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="warn">
+	<Properties>
+		<Property name="log-path">logs</Property>
+	</Properties>
+
+	<Appenders>
+		<!-- Console output config -->
+		<Console name="console-log" target="SYSTEM_OUT">
+			<PatternLayout
+				pattern="[%-4level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %M - %msg%n" />
+		</Console>
+
+		<!-- File output config -->
+		<RollingFile name="trace-log" fileName="${log-path}/thelost-trace.log"
+			filePattern="${log-path}/thelost-trace-%d{yyyy-MM-dd}-%i.log">
+			<PatternLayout
+				pattern="[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %M - %msg%n" />
+			<Policies>
+				<TimeBasedTriggeringPolicy interval="1"
+					modulate="true" />
+			</Policies>
+		</RollingFile>
+
+		<!-- File output config -->
+		<RollingFile name="error-log" fileName="${log-path}/thelost-error.log"
+			filePattern="${log-path}/thelost-error-%d{yyyy-MM-dd}-%i.log">
+			<PatternLayout
+				pattern="[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %M - %msg%n" />
+			<Policies>
+				<TimeBasedTriggeringPolicy interval="1"
+					modulate="true" />
+			</Policies>
+		</RollingFile>
+	</Appenders>
+
+	<!-- Logger config -->
+	<Loggers>
+		<Logger name="com.lmsoft.game.thelost" level="debug"
+			additivity="false">
+			<appender-ref ref="trace-log" level="debug" />
+			<appender-ref ref="error-log" level="error" />
+			<appender-ref ref="console-log" level="info" />
+		</Logger>
+		<Root level="info" additivity="false">
+			<AppenderRef ref="console-log" />
+		</Root>
+	</Loggers>
+</Configuration>
