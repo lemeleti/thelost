@@ -3,6 +3,10 @@ package com.lmsoft.game.thelost.controller;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.lmsoft.game.thelost.model.ItemEnum;
 
 /**
@@ -13,24 +17,16 @@ import com.lmsoft.game.thelost.model.ItemEnum;
  */
 public class ItemController {
 
-	private Map<ItemEnum, Boolean> items;
+	private final static Logger LOG = LogManager.getLogger(ItemController.class);
+
+	private Map<ItemEnum, Boolean> inventar;
 
 	/**
 	 * Default constructor.<br/>
 	 */
 	public ItemController() {
 		super();
-		items = new HashMap<>();
-	}
-
-	/**
-	 * Adds an item with default status not found.
-	 * 
-	 * @param name
-	 *            {@link String}
-	 */
-	public void addItem(ItemEnum item) {
-		items.put(item, false);
+		inventar = new HashMap<>();
 	}
 
 	/**
@@ -39,8 +35,9 @@ public class ItemController {
 	 * @param name
 	 *            {@link String}
 	 */
-	public void setItemFound(ItemEnum item) {
-		items.put(item, true);
+	public void putToInventar(ItemEnum item) {
+		LOG.log(Level.DEBUG, "Found the item [\"%s\"]", item.getItem());
+		inventar.put(item, true);
 	}
 
 	/**
@@ -51,7 +48,7 @@ public class ItemController {
 	public String getItemsAsString() {
 		String result = "";
 
-		for (Map.Entry<ItemEnum, Boolean> entry : items.entrySet()) {
+		for (Map.Entry<ItemEnum, Boolean> entry : inventar.entrySet()) {
 			if (entry.getValue()) {
 				result = String.format("%s, %s", entry.getKey().getItem(), result);
 			}

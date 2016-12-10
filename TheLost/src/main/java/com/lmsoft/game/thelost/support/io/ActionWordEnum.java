@@ -1,5 +1,11 @@
 package com.lmsoft.game.thelost.support.io;
 
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import com.lmsoft.game.thelost.controller.GameViewController;
+
 /**
  * Enum of all possible action words.
  * 
@@ -7,8 +13,6 @@ package com.lmsoft.game.thelost.support.io;
  * @date created on 04.12.2016
  */
 public enum ActionWordEnum {
-
-	/* !!!! ONLY LOWERCASE TEXT !!!! */
 	HELP("help"),
 
 	LOOK("look"),
@@ -22,6 +26,8 @@ public enum ActionWordEnum {
 	SEARCH_ITEM("searchitem"),
 
 	SHOW_ITEMS("showitems");
+
+	private final static Logger LOG = LogManager.getLogger(GameViewController.class);
 
 	private final String actionCommand;
 
@@ -41,7 +47,7 @@ public enum ActionWordEnum {
 				}
 			}
 		}
-
+		LOG.log(Level.ERROR, String.format("The action word \"%s\", does not exist i this game!", value));
 		return null;
 	}
 

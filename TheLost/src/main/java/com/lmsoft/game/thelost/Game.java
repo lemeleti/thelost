@@ -7,9 +7,12 @@ import static com.lmsoft.game.thelost.model.DirectionEnum.SOUTH;
 import static com.lmsoft.game.thelost.model.DirectionEnum.UP;
 import static com.lmsoft.game.thelost.model.DirectionEnum.WEST;
 
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.lmsoft.game.thelost.controller.GameViewController;
 import com.lmsoft.game.thelost.controller.ItemController;
-import com.lmsoft.game.thelost.controller.ObstacleController;
 import com.lmsoft.game.thelost.model.ItemEnum;
 import com.lmsoft.game.thelost.model.ObstacleEnum;
 import com.lmsoft.game.thelost.model.Room;
@@ -18,18 +21,20 @@ import com.lmsoft.game.thelost.support.io.ActionWordHelper;
 import com.lmsoft.game.thelost.support.io.Command;
 
 /**
- * 
+ * This class manages the game.<br/>
+ * All the rooms are here defined and connected.<br/>
+ * Also are the items and obstacles set in some rooms.
  * 
  * @author Leandro Meleti
  * @date created on 05.12.2016
  */
 public class Game {
 
+	private final static Logger LOG = LogManager.getLogger(Game.class);
+
 	private GameViewController guiController;
 
 	private ItemController itemController;
-
-	private ObstacleController obstacleController;
 
 	private Room currentRoom;
 
@@ -48,7 +53,6 @@ public class Game {
 		this.guiController = guiController;
 
 		itemController = new ItemController();
-		obstacleController = new ObstacleController();
 
 		createRooms();
 	}
@@ -58,6 +62,7 @@ public class Game {
 	}
 
 	private void printWelcome() {
+		LOG.log(Level.INFO, "Print welcome text");
 		guiController.appendConsoleText("Welcome to The Lost!");
 		guiController.appendConsoleText("\nYou're in a high-rise building. Recently, a terrorist group");
 		guiController.appendConsoleText("\nbombed the building. Try to find the exit. You will encounter challenges ");
@@ -105,6 +110,7 @@ public class Game {
 
 		ItemEnum item = currentRoom.getItemObject();
 		if (item != ItemEnum.NONE) {
+			LOG.log(Level.INFO, "Show ASCII drawing of the item.");
 			switch (item) {
 				case PIKACHU:
 					guiController.appendConsoleText("\n           ,     ,_");
@@ -124,7 +130,6 @@ public class Game {
 					guiController.appendConsoleText("\n                   ;    /\")     .;-,");
 					guiController.appendConsoleText("\n                    \\    /  __   .-'");
 					guiController.appendConsoleText("\n                     \\,_/-\"`  `-'\n");
-
 					break;
 
 				case SWORD:
@@ -148,7 +153,6 @@ public class Game {
 					guiController.appendConsoleText("\n        /.-. '----------.");
 					guiController.appendConsoleText("\n        \\'-' .--\"--\"\"-\"-'");
 					guiController.appendConsoleText("\n         '--'\n");
-
 					break;
 
 				case BONE:
@@ -157,16 +161,15 @@ public class Game {
 					guiController.appendConsoleText("\n      >=     _______     =<");
 					guiController.appendConsoleText("\n     (   ,-'`       `'-,   )");
 					guiController.appendConsoleText("\n      `-'               `-'\n");
-
 					break;
 
 				default:
-					// TODO: Log not implemented
+					LOG.log(Level.DEBUG, "The ASCII drawing of the item is not implemented yet!");
 					break;
 			}
 			guiController.appendConsoleText(String.format("\nYou found: %s", item.getItem()));
-			itemController.setItemFound(item);
-			currentRoom.setItemObject(ItemEnum.NONE);
+			itemController.putToInventar(item);
+			currentRoom.removeItem();
 		} else {
 			guiController.appendConsoleText("\nThere's nothing!");
 		}
@@ -184,6 +187,7 @@ public class Game {
 		String itemString = command.getSecondWord();
 		ObstacleEnum obstacle = nextRoom.getObstacleObject();
 
+		LOG.log(Level.DEBUG, String.format("Use the item [\"%s\"]", itemString));
 		switch (obstacle) {
 			case MONSTER:
 				if (itemString.equalsIgnoreCase(ItemEnum.SWORD.getItem())) {
@@ -221,12 +225,8 @@ public class Game {
 				}
 				break;
 
-			case NONE:
-				guiController.appendConsoleText("\nThe way is free!");
-				break;
-
 			default:
-				guiController.appendConsoleText("\nThere's nothing!");
+				guiController.appendConsoleText("\nThe way is free!");
 				break;
 		}
 
@@ -236,7 +236,6 @@ public class Game {
 	 * Logic to run when an obstacle has overcome
 	 */
 	private void overcomeObstacle(ObstacleEnum obstacle) {
-		obstacleController.setObstacleFound(obstacle);
 		nextRoom.setObstacleObject(ObstacleEnum.NONE);
 		nextRoom();
 	}
@@ -262,11 +261,13 @@ public class Game {
 		if (nextRoom == null) { // wrong direction or spelling error
 			guiController.appendConsoleText("\nThere's no way!");
 		} else if (nextRoom == finalRoom) {
+			LOG.log(Level.DEBUG, "Print found exit");
 			printEnteredFinalRoom(false);
 		} else if (nextRoom == secretElevator) {
 			guiController.appendConsoleText("\nOn which floor the game has started? ");
 			guiController.appendConsoleText("\nYou only have one chance! Otherwise, the building explodes");
 			guiController.appendConsoleText("\nand you lose the game! Good luck :)");
+
 			boolean result = checkPin();
 			if (result) {
 				guiController.appendConsoleText("\nThe elevator works!");
@@ -280,12 +281,13 @@ public class Game {
 				loseGame();
 			}
 		} else if (nextRoom == secretFinalRoom) {
+			LOG.log(Level.DEBUG, "Print found secret exit");
 			printEnteredFinalRoom(true);
 		} else if (nextRoom.getObstacleObject() != ObstacleEnum.NONE) {
 
 			ObstacleEnum obstacle = nextRoom.getObstacleObject();
 			guiController.appendConsoleText(
-					String.format("\nPassage impossible. Something in the way you: %s", obstacle.getObstacle()));
+					String.format("\nPassage impossible. Something is in the way: %s", obstacle.getObstacle()));
 
 			switch (obstacle) {
 				case MONSTER:
@@ -388,6 +390,8 @@ public class Game {
 	 * start room.
 	 */
 	private void createRooms() {
+
+		LOG.log(Level.DEBUG, "Prepare rooms");
 
 		/*
 		 * Declare all rooms.

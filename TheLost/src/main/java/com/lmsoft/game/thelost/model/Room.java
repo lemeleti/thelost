@@ -127,8 +127,8 @@ public class Room {
 	 * 
 	 * @param item
 	 */
-	public void setItemObject(ItemEnum item) {
-		this.itemObject = item;
+	public void removeItem() {
+		this.itemObject = ItemEnum.NONE;
 	}
 
 	/**
