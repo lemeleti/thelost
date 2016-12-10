@@ -1,7 +1,7 @@
 package com.lmsoft.game.thelost.controller;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -19,25 +19,36 @@ public class ItemController {
 
 	private final static Logger LOG = LogManager.getLogger(ItemController.class);
 
-	private Map<ItemEnum, Boolean> inventar;
+	private List<ItemEnum> inventory;
 
 	/**
 	 * Default constructor.<br/>
 	 */
 	public ItemController() {
 		super();
-		inventar = new HashMap<>();
+		inventory = new ArrayList<>();
 	}
 
 	/**
-	 * Sets the found item to status found
+	 * Adds an item to the inventory
 	 * 
 	 * @param name
 	 *            {@link String}
 	 */
-	public void putToInventar(ItemEnum item) {
+	public void putToInventory(ItemEnum item) {
 		LOG.log(Level.DEBUG, "Found the item [\"%s\"]", item.getItem());
-		inventar.put(item, true);
+		inventory.add(item);
+	}
+
+	/**
+	 * Removes an item from inventory
+	 * 
+	 * @param name
+	 *            {@link String}
+	 */
+	public void removeFromInventory(ItemEnum item) {
+		LOG.log(Level.DEBUG, "Remove item [\"%s\"]", item.getItem());
+		inventory.remove(item);
 	}
 
 	/**
@@ -48,9 +59,11 @@ public class ItemController {
 	public String getItemsAsString() {
 		String result = "";
 
-		for (Map.Entry<ItemEnum, Boolean> entry : inventar.entrySet()) {
-			if (entry.getValue()) {
-				result = String.format("%s, %s", entry.getKey().getItem(), result);
+		for (ItemEnum itemEnum : inventory) {
+			if (inventory.size() > 1) {
+				result = String.format("%s, %s", itemEnum.getItem(), result);
+			} else {
+				result = itemEnum.getItem();
 			}
 		}
 

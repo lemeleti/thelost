@@ -18,10 +18,11 @@ public class ActionWordHelper {
 	 * @return {@link String}
 	 */
 	public static String getAllValidActionWords() {
-		String result = "";
 
-		for (ActionWordEnum actionWord : ActionWordEnum.values()) {
-			result = String.format("%s, %s", actionWord.getActionWord(), result);
+		ActionWordEnum[] actionWords = ActionWordEnum.values();
+		String result = actionWords[0].getActionWord();
+		for (int i = 1; i < actionWords.length; i++) {
+			result = String.format("%s, %s", result, actionWords[i].getActionWord());
 		}
 
 		return result;

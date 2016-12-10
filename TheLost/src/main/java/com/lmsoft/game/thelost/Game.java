@@ -80,7 +80,8 @@ public class Game {
 	 * Lists all items the player found
 	 */
 	private void listItem() {
-		guiController.appendConsoleText(String.format("You've got these items: %s", itemController.getItemsAsString()));
+		guiController
+				.appendConsoleText(String.format("\nYou've got these items: %s", itemController.getItemsAsString()));
 	}
 
 	/*
@@ -168,7 +169,7 @@ public class Game {
 					break;
 			}
 			guiController.appendConsoleText(String.format("\nYou found: %s", item.getItem()));
-			itemController.putToInventar(item);
+			itemController.putToInventory(item);
 			currentRoom.removeItem();
 		} else {
 			guiController.appendConsoleText("\nThere's nothing!");
@@ -191,6 +192,7 @@ public class Game {
 		switch (obstacle) {
 			case MONSTER:
 				if (itemString.equalsIgnoreCase(ItemEnum.SWORD.getItem())) {
+					itemController.removeFromInventory(ItemEnum.SWORD);
 					guiController.appendConsoleText("\nYou've defeat the monster!");
 					overcomeObstacle(obstacle);
 				} else {
@@ -200,6 +202,7 @@ public class Game {
 
 			case WILD_POKEMON:
 				if (itemString.equalsIgnoreCase(ItemEnum.PIKACHU.getItem())) {
+					itemController.removeFromInventory(ItemEnum.PIKACHU);
 					guiController.appendConsoleText("\nYou've defeat the wild pokemon!");
 					overcomeObstacle(obstacle);
 				} else {
@@ -209,6 +212,7 @@ public class Game {
 
 			case ANGRY_DOG:
 				if (itemString.equalsIgnoreCase(ItemEnum.BONE.getItem())) {
+					itemController.removeFromInventory(ItemEnum.BONE);
 					guiController.appendConsoleText("\nYou've calmed the angry dog!");
 					overcomeObstacle(obstacle);
 				} else {
@@ -218,6 +222,7 @@ public class Game {
 
 			case CLOSED_DOOR:
 				if (itemString.equalsIgnoreCase(ItemEnum.KEY.getItem())) {
+					itemController.removeFromInventory(ItemEnum.KEY);
 					guiController.appendConsoleText("\nYou opened the door!");
 					overcomeObstacle(obstacle);
 				} else {
