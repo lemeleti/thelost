@@ -2,7 +2,6 @@ package com.lmsoft.game.thelost.controller;
 
 import java.util.Optional;
 
-import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -39,10 +38,10 @@ public class GameViewController {
 	private CommandParser parser;
 
 	/**
-	 * Do some inits and start the game
+	 * Start the game
 	 */
 	public void startGame() {
-		LOG.log(Level.INFO, "Start the game");
+		LOG.info("Start the game");
 		parser = new CommandParser(this);
 
 		game = new Game(this);
@@ -51,11 +50,13 @@ public class GameViewController {
 
 	@FXML
 	private void handleEnter() {
-		appendConsoleText(String.format("\n%s", tfCommand.getText()));
+		appendConsoleText(String.format("\n> %s\n", tfCommand.getText()));
 
 		boolean finished = game.processCommand(parser.getCommand());
 		if (finished) {
-			appendConsoleText("\nThanks for playing.");
+			appendConsoleText("\n---------------------------------------------------");
+			appendConsoleText("\n---\t\tThanks for playing.\t\t---");
+			appendConsoleText("\n---------------------------------------------------");
 			gameEnd();
 		} else {
 			tfCommand.setText("");
@@ -66,7 +67,7 @@ public class GameViewController {
 	 * End the game
 	 */
 	public void gameEnd() {
-		LOG.log(Level.INFO, "End the game");
+		LOG.info("End the game");
 		btnEnter.setVisible(false);
 		tfCommand.setVisible(false);
 	}
@@ -78,7 +79,9 @@ public class GameViewController {
 	 *            {@link String}
 	 */
 	public void appendConsoleText(String text) {
-		LOG.log(Level.DEBUG, String.format("text[\"%s\"]", text.replace("\n", "")));
+		if (LOG.isDebugEnabled()) {
+			LOG.debug(String.format("text[\"%s\"]", text.replace("\n", "")));
+		}
 		taConsole.appendText(String.format("%s", text));
 	}
 
@@ -97,10 +100,12 @@ public class GameViewController {
 	 * @return pin {@link String}
 	 */
 	public String getPin() {
-		LOG.log(Level.INFO, "Start dialog");
+		String title = "Secret Elevator Pin";
+
+		LOG.info(String.format("Start dialog (%s)", title));
 
 		TextInputDialog dialog = new TextInputDialog();
-		dialog.setTitle("Secret Elevator Pin");
+		dialog.setTitle(title);
 		dialog.setHeaderText("On which floor did you start?");
 		dialog.setContentText("Pin:");
 		dialog.setResizable(false);

@@ -2,7 +2,6 @@ package com.lmsoft.game.thelost;
 
 import java.io.IOException;
 
-import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -45,13 +44,13 @@ public class MainApp extends Application {
 	private void showPlayView() {
 		try {
 			FXMLLoader loader = new FXMLLoader();
-			LOG.log(Level.INFO, "Loading fxml");
+			LOG.info("Loading fxml");
 			loader.setLocation(MainApp.class.getResource("/fxml/gameView.fxml"));
 
-			LOG.log(Level.INFO, "Loading pane");
+			LOG.info("Loading pane");
 			AnchorPane gameLayout = (AnchorPane) loader.load();
 
-			LOG.log(Level.INFO, "Loading controller");
+			LOG.info("Loading controller");
 			GameViewController controller = loader.getController();
 			controller.startGame();
 
@@ -61,10 +60,10 @@ public class MainApp extends Application {
 			primaryStage.setMinWidth(gameLayout.getPrefWidth());
 			primaryStage.setResizable(false);
 
-			LOG.log(Level.INFO, "Show the window");
+			LOG.info("Show the window");
 			primaryStage.show();
 		} catch (IOException e) {
-			LOG.log(Level.ERROR, "Load and show fxml error!", e);
+			LOG.error("Load and show fxml error!", e);
 			e.printStackTrace();
 		}
 	}

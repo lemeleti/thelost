@@ -1,6 +1,5 @@
 package com.lmsoft.game.thelost.support.io;
 
-import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -47,7 +46,8 @@ public enum ActionWordEnum {
 				}
 			}
 		}
-		LOG.log(Level.ERROR, String.format("The action word \"%s\", does not exist i this game!", value));
+
+		LOG.error(String.format("The action word \"%s\", does not exist i this game!", value));
 		return null;
 	}
 
