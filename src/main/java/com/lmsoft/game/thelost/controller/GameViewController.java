@@ -41,7 +41,7 @@ public class GameViewController {
 	 * Start the game
 	 */
 	public void startGame() {
-		LOG.info("Start the game");
+		LOG.info("Game started");
 		parser = new CommandParser(this);
 
 		game = new Game(this);
@@ -67,7 +67,7 @@ public class GameViewController {
 	 * End the game
 	 */
 	public void gameEnd() {
-		LOG.info("End the game");
+		LOG.info("Game over");
 		btnEnter.setVisible(false);
 		tfCommand.setVisible(false);
 	}

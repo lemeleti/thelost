@@ -1,6 +1,32 @@
-#background {
+.background {
 	-fx-background-image:
 		url('../image/avengers_wallpaper_city_background.png');
 	-fx-background-position: center;
 	-fx-background-repeat: stretch;
+}
+
+.button {
+	-fx-background-color: 
+        linear-gradient(#686868 0.0%, #232723 25.0%, #373837 75.0%, #757575 100.0%),
+        linear-gradient(#020b02, #3a3a3a),
+        linear-gradient(#b9b9b9 0.0%, #c2c2c2 20.0%, #afafaf 80.0%, #c8c8c8 100.0%),
+        linear-gradient(#f5f5f5 0.0%, #dbdbdb 50.0%, #cacaca 51.0%, #d7d7d7 100.0%);
+	-fx-background-insets: 0.0,1.0,3.0,4.0;
+    -fx-background-radius: 9.0,8.0,5.0,4.0;
+    -fx-effect: dropshadow( three-pass-box , rgba(255.0,255.0,255.0,0.2) , 1.0, 0.0 , 0.0 , 1.0);
+    -fx-font-weight: bold;
+    -fx-text-fill: black;
+}
+
+#btnStart {
+    -fx-padding: 15.0 30.0 15.0 30.0;
+    -fx-font-size: 20.0px;
+}
+
+#btnEnter {
+    -fx-padding: 7.0 0.0 7.0 0.0;
+}
+
+#taConsole {
+	-fx-font-family: 'Courier New';
 }
