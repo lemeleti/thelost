@@ -7,7 +7,6 @@ import static com.lmsoft.game.thelost.model.DirectionEnum.SOUTH;
 import static com.lmsoft.game.thelost.model.DirectionEnum.UP;
 import static com.lmsoft.game.thelost.model.DirectionEnum.WEST;
 
-import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -62,7 +61,7 @@ public class Game {
 	}
 
 	private void printWelcome() {
-		LOG.log(Level.INFO, "Print welcome text");
+		LOG.info("Print welcome text");
 		guiController.appendConsoleText("Welcome to The Lost!");
 		guiController.appendConsoleText("\nYou're in a high-rise building. Recently, a terrorist group");
 		guiController.appendConsoleText("\nbombed the building. Try to find the exit. You will encounter challenges ");
@@ -111,7 +110,7 @@ public class Game {
 
 		ItemEnum item = currentRoom.getItemObject();
 		if (item != ItemEnum.NONE) {
-			LOG.log(Level.INFO, "Show ASCII drawing of the item.");
+			LOG.info("Show ASCII drawing of the item.");
 			switch (item) {
 				case PIKACHU:
 					guiController.appendConsoleText("\n           ,     ,_");
@@ -165,7 +164,9 @@ public class Game {
 					break;
 
 				default:
-					LOG.log(Level.DEBUG, "The ASCII drawing of the item is not implemented yet!");
+					if (LOG.isDebugEnabled()) {
+						LOG.debug("The ASCII drawing of the item is not implemented yet!");
+					}
 					break;
 			}
 			guiController.appendConsoleText(String.format("\nYou found: %s", item.getItem()));
@@ -188,7 +189,9 @@ public class Game {
 		String itemString = command.getSecondWord();
 		ObstacleEnum obstacle = nextRoom.getObstacleObject();
 
-		LOG.log(Level.DEBUG, String.format("Use the item [\"%s\"]", itemString));
+		if (LOG.isDebugEnabled()) {
+			LOG.debug(String.format("Use the item [\"%s\"]", itemString));
+		}
 		switch (obstacle) {
 			case MONSTER:
 				if (itemString.equalsIgnoreCase(ItemEnum.SWORD.getItem())) {
@@ -266,7 +269,9 @@ public class Game {
 		if (nextRoom == null) { // wrong direction or spelling error
 			guiController.appendConsoleText("\nThere's no way!");
 		} else if (nextRoom == finalRoom) {
-			LOG.log(Level.DEBUG, "Print found exit");
+			if (LOG.isDebugEnabled()) {
+				LOG.debug("Print found exit");
+			}
 			printEnteredFinalRoom(false);
 		} else if (nextRoom == secretElevator) {
 			guiController.appendConsoleText("\nOn which floor the game has started? ");
@@ -286,7 +291,9 @@ public class Game {
 				loseGame();
 			}
 		} else if (nextRoom == secretFinalRoom) {
-			LOG.log(Level.DEBUG, "Print found secret exit");
+			if (LOG.isDebugEnabled()) {
+				LOG.debug("Print found secret exit");
+			}
 			printEnteredFinalRoom(true);
 		} else if (nextRoom.getObstacleObject() != ObstacleEnum.NONE) {
 
@@ -395,9 +402,9 @@ public class Game {
 	 * start room.
 	 */
 	private void createRooms() {
-
-		LOG.log(Level.DEBUG, "Prepare rooms");
-
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("Prepare rooms");
+		}
 		/*
 		 * Declare all rooms.
 		 */
