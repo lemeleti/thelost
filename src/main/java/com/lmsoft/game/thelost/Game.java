@@ -61,7 +61,10 @@ public class Game {
 	}
 
 	private void printWelcome() {
-		LOG.info("Print welcome text");
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("Print welcome text");
+		}
+
 		guiController.appendConsoleText("Welcome to The Lost!");
 		guiController.appendConsoleText("\nYou're in a high-rise building. Recently, a terrorist group");
 		guiController.appendConsoleText("\nbombed the building. Try to find the exit. You will encounter challenges ");
@@ -110,7 +113,10 @@ public class Game {
 
 		ItemEnum item = currentRoom.getItemObject();
 		if (item != ItemEnum.NONE) {
-			LOG.info("Show ASCII drawing of the item.");
+			if (LOG.isDebugEnabled()) {
+				LOG.debug(String.format("Show ASCII drawing of the item [\"%s\"].", item.getItem()));
+			}
+			LOG.info(String.format("Found item [\"%s\"]", item.getItem()));
 			switch (item) {
 				case PIKACHU:
 					guiController.appendConsoleText("\n           ,     ,_");
@@ -190,11 +196,12 @@ public class Game {
 		ObstacleEnum obstacle = nextRoom.getObstacleObject();
 
 		if (LOG.isDebugEnabled()) {
-			LOG.debug(String.format("Use the item [\"%s\"]", itemString));
+			LOG.debug(String.format("Using the item [\"%s\"]", itemString));
 		}
 		switch (obstacle) {
 			case MONSTER:
 				if (itemString.equalsIgnoreCase(ItemEnum.SWORD.getItem())) {
+					LOG.info(String.format("Used the item [\"%s\"]", itemString));
 					itemController.removeFromInventory(ItemEnum.SWORD);
 					guiController.appendConsoleText("\nYou've defeat the monster!");
 					overcomeObstacle(obstacle);
@@ -205,6 +212,7 @@ public class Game {
 
 			case WILD_POKEMON:
 				if (itemString.equalsIgnoreCase(ItemEnum.PIKACHU.getItem())) {
+					LOG.info(String.format("Used the item [\"%s\"]", itemString));
 					itemController.removeFromInventory(ItemEnum.PIKACHU);
 					guiController.appendConsoleText("\nYou've defeat the wild pokemon!");
 					overcomeObstacle(obstacle);
@@ -215,6 +223,7 @@ public class Game {
 
 			case ANGRY_DOG:
 				if (itemString.equalsIgnoreCase(ItemEnum.BONE.getItem())) {
+					LOG.info(String.format("Used the item [\"%s\"]", itemString));
 					itemController.removeFromInventory(ItemEnum.BONE);
 					guiController.appendConsoleText("\nYou've calmed the angry dog!");
 					overcomeObstacle(obstacle);
@@ -225,6 +234,7 @@ public class Game {
 
 			case CLOSED_DOOR:
 				if (itemString.equalsIgnoreCase(ItemEnum.KEY.getItem())) {
+					LOG.info(String.format("Used the item [\"%s\"]", itemString));
 					itemController.removeFromInventory(ItemEnum.KEY);
 					guiController.appendConsoleText("\nYou opened the door!");
 					overcomeObstacle(obstacle);
@@ -296,8 +306,9 @@ public class Game {
 			}
 			printEnteredFinalRoom(true);
 		} else if (nextRoom.getObstacleObject() != ObstacleEnum.NONE) {
-
 			ObstacleEnum obstacle = nextRoom.getObstacleObject();
+			LOG.info(String.format("Access to the next room is blocked by an obstacle [\"%s\"]",
+					obstacle.getObstacle()));
 			guiController.appendConsoleText(
 					String.format("\nPassage impossible. Something is in the way: %s", obstacle.getObstacle()));
 

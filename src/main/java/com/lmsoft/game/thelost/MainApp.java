@@ -6,6 +6,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.lmsoft.game.thelost.controller.GameViewController;
+import com.lmsoft.game.thelost.controller.StartViewController;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -33,24 +34,59 @@ public class MainApp extends Application {
 	public void start(Stage primaryStage) throws Exception {
 		this.primaryStage = primaryStage;
 
-		showMainView();
+		showStartView();
 	}
 
-	private void showMainView() {
-		// TODO: Main view
-		showPlayView();
-	}
-
-	private void showPlayView() {
+	private void showStartView() {
 		try {
 			FXMLLoader loader = new FXMLLoader();
-			LOG.info("Loading fxml");
+			if (LOG.isDebugEnabled()) {
+				LOG.debug("Loading fxml (start view)");
+			}
+			loader.setLocation(MainApp.class.getResource("/fxml/startView.fxml"));
+
+			if (LOG.isDebugEnabled()) {
+				LOG.debug("Loading pane");
+			}
+			AnchorPane startLayout = (AnchorPane) loader.load();
+
+			if (LOG.isDebugEnabled()) {
+				LOG.debug("Loading controller");
+			}
+			StartViewController controller = loader.getController();
+			controller.setMain(this);
+
+			Scene scene = new Scene(startLayout);
+			primaryStage.setScene(scene);
+			primaryStage.setMinHeight(startLayout.getPrefHeight());
+			primaryStage.setMinWidth(startLayout.getPrefWidth());
+			primaryStage.setResizable(false);
+
+			if (LOG.isDebugEnabled()) {
+				LOG.debug("Show the window");
+			}
+			primaryStage.show();
+		} catch (IOException e) {
+			LOG.error("Load and show fxml error!", e);
+		}
+	}
+
+	public void showGameView() {
+		try {
+			FXMLLoader loader = new FXMLLoader();
+			if (LOG.isDebugEnabled()) {
+				LOG.debug("Loading fxml (game view)");
+			}
 			loader.setLocation(MainApp.class.getResource("/fxml/gameView.fxml"));
 
-			LOG.info("Loading pane");
+			if (LOG.isDebugEnabled()) {
+				LOG.debug("Loading pane");
+			}
 			AnchorPane gameLayout = (AnchorPane) loader.load();
 
-			LOG.info("Loading controller");
+			if (LOG.isDebugEnabled()) {
+				LOG.debug("Loading controller");
+			}
 			GameViewController controller = loader.getController();
 			controller.startGame();
 
@@ -60,11 +96,12 @@ public class MainApp extends Application {
 			primaryStage.setMinWidth(gameLayout.getPrefWidth());
 			primaryStage.setResizable(false);
 
-			LOG.info("Show the window");
+			if (LOG.isDebugEnabled()) {
+				LOG.debug("Show the window");
+			}
 			primaryStage.show();
 		} catch (IOException e) {
 			LOG.error("Load and show fxml error!", e);
-			e.printStackTrace();
 		}
 	}
 
