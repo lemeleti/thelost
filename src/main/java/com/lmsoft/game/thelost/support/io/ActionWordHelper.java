@@ -39,13 +39,9 @@ public class ActionWordHelper {
 	public static boolean isActionCommand(String actionWord) {
 		boolean result = false;
 
-		if (actionWord != null) {
-			for (ActionWordEnum aw : ActionWordEnum.values()) {
-				if (actionWord.equalsIgnoreCase(aw.getActionWord())) {
-					result = true;
-					break;
-				}
-			}
+		ActionWordEnum actionWordEnum = ActionWordEnum.getEnumByString(actionWord);
+		if (actionWordEnum != null) {
+			result = true;
 		}
 
 		return result;

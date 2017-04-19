@@ -13,7 +13,7 @@
 
 		<!-- File output config -->
 		<RollingFile name="debug-log" fileName="${log-path}/thelost-debug.log"
-			filePattern="${log-path}/thelost-trace-%d{yyyy-MM-dd}-%i.log">
+			filePattern="${log-path}/thelost-debug-%d{yyyy-MM-dd}-%i.log">
 			<PatternLayout
 				pattern="[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %M - %msg%n" />
 			<Policies>
