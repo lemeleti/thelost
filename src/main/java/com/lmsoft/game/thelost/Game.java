@@ -81,7 +81,7 @@ public class Game {
 	/*
 	 * Lists all items the player found
 	 */
-	private void listItem() {
+	private void showItems() {
 		guiController
 				.appendConsoleText(String.format("\nYou've got these items: %s", itemController.getItemsAsString()));
 	}
@@ -109,7 +109,7 @@ public class Game {
 	/*
 	 * Prints ASCII drawing of the item or the text that there's nothing
 	 */
-	private void showItem() {
+	private void searchItem() {
 
 		ItemEnum item = currentRoom.getItemObject();
 		if (item != ItemEnum.NONE) {
@@ -388,10 +388,10 @@ public class Game {
 					goRoom(command);
 					break;
 				case SEARCH_ITEM:
-					showItem();
+					searchItem();
 					break;
 				case SHOW_ITEMS:
-					listItem();
+					showItems();
 					break;
 				case USE:
 					use(command);

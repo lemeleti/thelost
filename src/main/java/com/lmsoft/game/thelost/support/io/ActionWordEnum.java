@@ -38,7 +38,6 @@ public enum ActionWordEnum {
 	}
 
 	public static ActionWordEnum getEnumByString(String value) {
-
 		if (value != null) {
 			for (ActionWordEnum actionWord : ActionWordEnum.values()) {
 				if (value.equalsIgnoreCase(actionWord.getActionWord())) {
