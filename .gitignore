@@ -10,3 +10,6 @@ RemoteSystemsTempFiles
 # Maven
 target
 log
+
+# Custom
+logs
