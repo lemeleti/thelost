@@ -52,6 +52,14 @@
 	</dependencies>
 	<build>
 		<plugins>
+			<!-- release project -->
+			<plugin>
+				<artifactId>maven-release-plugin</artifactId>
+				<version>2.5.2</version>
+				<configuration>
+					<tagBase>file:///${basedir}/tags</tagBase>
+				</configuration>
+			</plugin>
 			<!-- package to a single runable jar -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
