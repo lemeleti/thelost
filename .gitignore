@@ -1,1 +1,12 @@
-/target/
+# Eclipse
+.buildpath
+.classpath
+.project
+.settings
+.metadata
+*.launch
+RemoteSystemsTempFiles
+
+# Maven
+target
+log
