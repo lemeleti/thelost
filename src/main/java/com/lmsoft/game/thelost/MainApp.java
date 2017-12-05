@@ -48,7 +48,7 @@ public class MainApp extends Application {
 			if (LOG.isDebugEnabled()) {
 				LOG.debug("Loading pane");
 			}
-			AnchorPane startLayout = (AnchorPane) loader.load();
+			AnchorPane startLayout = loader.load();
 
 			if (LOG.isDebugEnabled()) {
 				LOG.debug("Loading controller");
@@ -82,7 +82,7 @@ public class MainApp extends Application {
 			if (LOG.isDebugEnabled()) {
 				LOG.debug("Loading pane");
 			}
-			AnchorPane gameLayout = (AnchorPane) loader.load();
+			AnchorPane gameLayout = loader.load();
 
 			if (LOG.isDebugEnabled()) {
 				LOG.debug("Loading controller");

@@ -50,7 +50,7 @@ public class GameViewController {
 
 	@FXML
 	private void handleEnter() {
-		appendConsoleText(String.format("\n> %s\n", tfCommand.getText()));
+		appendConsoleText(String.format("%n> %s%n", tfCommand.getText()));
 
 		boolean finished = game.processCommand(parser.getCommand());
 		if (finished) {
