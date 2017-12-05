@@ -22,7 +22,7 @@ import javafx.stage.Stage;
  */
 public class MainApp extends Application {
 
-	private final static Logger LOG = LogManager.getLogger(MainApp.class);
+	private static final Logger LOG = LogManager.getLogger(MainApp.class);
 
 	private Stage primaryStage;
 

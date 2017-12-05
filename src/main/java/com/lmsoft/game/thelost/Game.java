@@ -29,7 +29,9 @@ import com.lmsoft.game.thelost.support.io.Command;
  */
 public class Game {
 
-	private final static Logger LOG = LogManager.getLogger(Game.class);
+	private static final String STRING_FORMAT_USED_THE_ITEM = "Used the item [\"%s\"]";
+
+	private static final Logger LOG = LogManager.getLogger(Game.class);
 
 	private GameViewController guiController;
 
@@ -201,10 +203,10 @@ public class Game {
 		switch (obstacle) {
 			case MONSTER:
 				if (itemString.equalsIgnoreCase(ItemEnum.SWORD.getItem())) {
-					LOG.info(String.format("Used the item [\"%s\"]", itemString));
+					LOG.info(String.format(STRING_FORMAT_USED_THE_ITEM, itemString));
 					itemController.removeFromInventory(ItemEnum.SWORD);
 					guiController.appendConsoleText("\nYou've defeat the monster!");
-					overcomeObstacle(obstacle);
+					overcomeObstacle();
 				} else {
 					guiController.appendConsoleText("\nYou need a sword to defeat the monster!");
 				}
@@ -212,10 +214,10 @@ public class Game {
 
 			case WILD_POKEMON:
 				if (itemString.equalsIgnoreCase(ItemEnum.PIKACHU.getItem())) {
-					LOG.info(String.format("Used the item [\"%s\"]", itemString));
+					LOG.info(String.format(STRING_FORMAT_USED_THE_ITEM, itemString));
 					itemController.removeFromInventory(ItemEnum.PIKACHU);
 					guiController.appendConsoleText("\nYou've defeat the wild pokemon!");
-					overcomeObstacle(obstacle);
+					overcomeObstacle();
 				} else {
 					guiController.appendConsoleText("\nYou need Pikachu to defeat this Pokemon!");
 				}
@@ -223,10 +225,10 @@ public class Game {
 
 			case ANGRY_DOG:
 				if (itemString.equalsIgnoreCase(ItemEnum.BONE.getItem())) {
-					LOG.info(String.format("Used the item [\"%s\"]", itemString));
+					LOG.info(String.format(STRING_FORMAT_USED_THE_ITEM, itemString));
 					itemController.removeFromInventory(ItemEnum.BONE);
 					guiController.appendConsoleText("\nYou've calmed the angry dog!");
-					overcomeObstacle(obstacle);
+					overcomeObstacle();
 				} else {
 					guiController.appendConsoleText("\nYou need a bone to calm the dog!");
 				}
@@ -234,10 +236,10 @@ public class Game {
 
 			case CLOSED_DOOR:
 				if (itemString.equalsIgnoreCase(ItemEnum.KEY.getItem())) {
-					LOG.info(String.format("Used the item [\"%s\"]", itemString));
+					LOG.info(String.format(STRING_FORMAT_USED_THE_ITEM, itemString));
 					itemController.removeFromInventory(ItemEnum.KEY);
 					guiController.appendConsoleText("\nYou opened the door!");
-					overcomeObstacle(obstacle);
+					overcomeObstacle();
 				} else {
 					guiController.appendConsoleText("\nYou need a key to open this door!");
 				}
@@ -251,9 +253,9 @@ public class Game {
 	}
 
 	/*
-	 * Logic to run when an obstacle has overcome
+	 * Remove obstacle from the game and go on.
 	 */
-	private void overcomeObstacle(ObstacleEnum obstacle) {
+	private void overcomeObstacle() {
 		nextRoom.setObstacleObject(ObstacleEnum.NONE);
 		nextRoom();
 	}

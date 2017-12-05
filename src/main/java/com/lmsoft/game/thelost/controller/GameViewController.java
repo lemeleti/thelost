@@ -22,7 +22,7 @@ import javafx.scene.control.TextInputDialog;
  */
 public class GameViewController {
 
-	private final static Logger LOG = LogManager.getLogger(GameViewController.class);
+	private static final Logger LOG = LogManager.getLogger(GameViewController.class);
 
 	@FXML
 	private TextArea taConsole;
