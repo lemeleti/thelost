@@ -59,7 +59,7 @@ public class Room {
 	 * @return {@link String}
 	 */
 	public String getLongDescription() {
-		return String.format("%s.\n%s", getDescription(), getExitsAsString());
+		return String.format("%s.%n%s", getDescription(), getExitsAsString());
 	}
 
 	private String getExitsAsString() {
