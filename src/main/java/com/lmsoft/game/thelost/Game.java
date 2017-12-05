@@ -326,8 +326,7 @@ public class Game {
 
 	private void foundObstacle() {
 		ObstacleEnum obstacle = nextRoom.getObstacleObject();
-		LOG.info(String.format("Access to the next room is blocked by an obstacle [\"%s\"]",
-				obstacle.getObstacle()));
+		LOG.info(String.format("Access to the next room is blocked by an obstacle [\"%s\"]", obstacle.getObstacle()));
 		guiController.appendConsoleText(
 				String.format("%nPassage impossible. Something is in the way: %s", obstacle.getObstacle()));
 

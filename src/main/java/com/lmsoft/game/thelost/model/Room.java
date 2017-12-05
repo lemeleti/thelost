@@ -64,7 +64,7 @@ public class Room {
 
 	private String getExitsAsString() {
 		StringBuilder sb = new StringBuilder();
-		
+
 		sb.append("Exits:");
 
 		Set<DirectionEnum> key = exits.keySet();
