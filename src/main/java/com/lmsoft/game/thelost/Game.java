@@ -29,7 +29,11 @@ import com.lmsoft.game.thelost.support.io.Command;
  */
 public class Game {
 
-	private final static Logger LOG = LogManager.getLogger(Game.class);
+	private static final String MESSAGE_STARS_NEWLINE = "************************************************************\n";
+
+	private static final String STRING_FORMAT_USED_THE_ITEM = "Used the item [\"%s\"]";
+
+	private static final Logger LOG = LogManager.getLogger(Game.class);
 
 	private GameViewController guiController;
 
@@ -75,7 +79,7 @@ public class Game {
 	}
 
 	private void look() {
-		guiController.appendConsoleText(String.format("\n%s", currentRoom.getLongDescription()));
+		guiController.appendConsoleText(String.format("%n%s", currentRoom.getLongDescription()));
 	}
 
 	/*
@@ -83,7 +87,7 @@ public class Game {
 	 */
 	private void showItems() {
 		guiController
-				.appendConsoleText(String.format("\nYou've got these items: %s", itemController.getItemsAsString()));
+				.appendConsoleText(String.format("%nYou've got these items: %s", itemController.getItemsAsString()));
 	}
 
 	/*
@@ -91,7 +95,7 @@ public class Game {
 	 */
 	private void printHelp() {
 		guiController.appendConsoleText(
-				String.format("\nYou got these commands:\n%s", ActionWordHelper.getAllValidActionWords()));
+				String.format("%nYou got these commands:%n%s", ActionWordHelper.getAllValidActionWords()));
 	}
 
 	/*
@@ -175,7 +179,7 @@ public class Game {
 					}
 					break;
 			}
-			guiController.appendConsoleText(String.format("\nYou found: %s", item.getItem()));
+			guiController.appendConsoleText(String.format("%nYou found: %s", item.getItem()));
 			itemController.putToInventory(item);
 			currentRoom.removeItem();
 		} else {
@@ -201,10 +205,10 @@ public class Game {
 		switch (obstacle) {
 			case MONSTER:
 				if (itemString.equalsIgnoreCase(ItemEnum.SWORD.getItem())) {
-					LOG.info(String.format("Used the item [\"%s\"]", itemString));
+					LOG.info(String.format(STRING_FORMAT_USED_THE_ITEM, itemString));
 					itemController.removeFromInventory(ItemEnum.SWORD);
 					guiController.appendConsoleText("\nYou've defeat the monster!");
-					overcomeObstacle(obstacle);
+					overcomeObstacle();
 				} else {
 					guiController.appendConsoleText("\nYou need a sword to defeat the monster!");
 				}
@@ -212,10 +216,10 @@ public class Game {
 
 			case WILD_POKEMON:
 				if (itemString.equalsIgnoreCase(ItemEnum.PIKACHU.getItem())) {
-					LOG.info(String.format("Used the item [\"%s\"]", itemString));
+					LOG.info(String.format(STRING_FORMAT_USED_THE_ITEM, itemString));
 					itemController.removeFromInventory(ItemEnum.PIKACHU);
 					guiController.appendConsoleText("\nYou've defeat the wild pokemon!");
-					overcomeObstacle(obstacle);
+					overcomeObstacle();
 				} else {
 					guiController.appendConsoleText("\nYou need Pikachu to defeat this Pokemon!");
 				}
@@ -223,10 +227,10 @@ public class Game {
 
 			case ANGRY_DOG:
 				if (itemString.equalsIgnoreCase(ItemEnum.BONE.getItem())) {
-					LOG.info(String.format("Used the item [\"%s\"]", itemString));
+					LOG.info(String.format(STRING_FORMAT_USED_THE_ITEM, itemString));
 					itemController.removeFromInventory(ItemEnum.BONE);
 					guiController.appendConsoleText("\nYou've calmed the angry dog!");
-					overcomeObstacle(obstacle);
+					overcomeObstacle();
 				} else {
 					guiController.appendConsoleText("\nYou need a bone to calm the dog!");
 				}
@@ -234,10 +238,10 @@ public class Game {
 
 			case CLOSED_DOOR:
 				if (itemString.equalsIgnoreCase(ItemEnum.KEY.getItem())) {
-					LOG.info(String.format("Used the item [\"%s\"]", itemString));
+					LOG.info(String.format(STRING_FORMAT_USED_THE_ITEM, itemString));
 					itemController.removeFromInventory(ItemEnum.KEY);
 					guiController.appendConsoleText("\nYou opened the door!");
-					overcomeObstacle(obstacle);
+					overcomeObstacle();
 				} else {
 					guiController.appendConsoleText("\nYou need a key to open this door!");
 				}
@@ -251,9 +255,9 @@ public class Game {
 	}
 
 	/*
-	 * Logic to run when an obstacle has overcome
+	 * Remove obstacle from the game and go on.
 	 */
-	private void overcomeObstacle(ObstacleEnum obstacle) {
+	private void overcomeObstacle() {
 		nextRoom.setObstacleObject(ObstacleEnum.NONE);
 		nextRoom();
 	}
@@ -273,7 +277,6 @@ public class Game {
 		}
 
 		String direction = command.getSecondWord();
-
 		nextRoom = currentRoom.getExit(direction);
 
 		if (nextRoom == null) { // wrong direction or spelling error
@@ -284,75 +287,82 @@ public class Game {
 			}
 			printEnteredFinalRoom(false);
 		} else if (nextRoom == secretElevator) {
-			guiController.appendConsoleText("\nOn which floor the game has started? ");
-			guiController.appendConsoleText("\nYou only have one chance! Otherwise, the building explodes");
-			guiController.appendConsoleText("\nand you lose the game! Good luck :)");
-
-			boolean result = checkPin();
-			if (result) {
-				guiController.appendConsoleText("\nThe elevator works!");
-				if (nextRoom == null) {
-					guiController.appendConsoleText("\nThere's no way!");
-				} else {
-					currentRoom = nextRoom;
-					look();
-				}
-			} else {
-				loseGame();
-			}
+			checkElevatorCode();
 		} else if (nextRoom == secretFinalRoom) {
 			if (LOG.isDebugEnabled()) {
 				LOG.debug("Print found secret exit");
 			}
 			printEnteredFinalRoom(true);
 		} else if (nextRoom.getObstacleObject() != ObstacleEnum.NONE) {
-			ObstacleEnum obstacle = nextRoom.getObstacleObject();
-			LOG.info(String.format("Access to the next room is blocked by an obstacle [\"%s\"]",
-					obstacle.getObstacle()));
-			guiController.appendConsoleText(
-					String.format("\nPassage impossible. Something is in the way: %s", obstacle.getObstacle()));
-
-			switch (obstacle) {
-				case MONSTER:
-				case WILD_POKEMON:
-				case CLOSED_DOOR:
-				case ANGRY_DOG:
-					guiController.appendConsoleText(String.format("\n%s", obstacle.getSolution()));
-					break;
-
-				default:
-					loseGame();
-					break;
-			}
+			foundObstacle();
 		} else {
 			nextRoom();
 		}
 
 	}
 
+	private void checkElevatorCode() {
+		guiController.appendConsoleText("\nOn which floor the game has started? ");
+		guiController.appendConsoleText("\nYou only have one chance! Otherwise, the building explodes");
+		guiController.appendConsoleText("\nand you lose the game! Good luck :)");
+
+		boolean result = checkPin();
+		if (result) {
+			guiController.appendConsoleText("\nThe elevator works!");
+			if (nextRoom == null) {
+				guiController.appendConsoleText("\nThere's no way!");
+			} else {
+				currentRoom = nextRoom;
+				look();
+			}
+		} else {
+			loseGame();
+		}
+	}
+
 	private boolean checkPin() {
 		return "9".equals(guiController.getPin().trim());
 	}
 
+	private void foundObstacle() {
+		ObstacleEnum obstacle = nextRoom.getObstacleObject();
+		LOG.info(String.format("Access to the next room is blocked by an obstacle [\"%s\"]", obstacle.getObstacle()));
+		guiController.appendConsoleText(
+				String.format("%nPassage impossible. Something is in the way: %s", obstacle.getObstacle()));
+
+		switch (obstacle) {
+			case MONSTER:
+			case WILD_POKEMON:
+			case CLOSED_DOOR:
+			case ANGRY_DOG:
+				guiController.appendConsoleText(String.format("%n%s", obstacle.getSolution()));
+				break;
+
+			default:
+				loseGame();
+				break;
+		}
+	}
+
 	private void loseGame() {
-		guiController.appendConsoleText("\n\n************************************************************\n");
-		guiController.appendConsoleText("************************************************************\n");
+		guiController.appendConsoleText(String.format("%n%n%s", MESSAGE_STARS_NEWLINE));
+		guiController.appendConsoleText(MESSAGE_STARS_NEWLINE);
 		guiController.appendConsoleText("***              Y O U ' V E      L O S T !              ***\n");
-		guiController.appendConsoleText("************************************************************\n");
-		guiController.appendConsoleText("************************************************************\n");
+		guiController.appendConsoleText(MESSAGE_STARS_NEWLINE);
+		guiController.appendConsoleText(MESSAGE_STARS_NEWLINE);
 		guiController.gameEnd();
 	}
 
 	private void printEnteredFinalRoom(boolean wasSecretFinal) {
-		guiController.appendConsoleText("\n\n************************************************************\n");
-		guiController.appendConsoleText("************************************************************\n");
+		guiController.appendConsoleText(String.format("%n%n%s", MESSAGE_STARS_NEWLINE));
+		guiController.appendConsoleText(MESSAGE_STARS_NEWLINE);
 		guiController.appendConsoleText("***       You've really made it! CONGRATULATE !!         ***\n");
 		guiController.appendConsoleText("***       Unfortunately the game is over...              ***\n");
 		if (wasSecretFinal) {
 			guiController.appendConsoleText("***       P.S. Nice that you have found the secret exit! ***\n");
 		}
-		guiController.appendConsoleText("************************************************************\n");
-		guiController.appendConsoleText("************************************************************\n");
+		guiController.appendConsoleText(MESSAGE_STARS_NEWLINE);
+		guiController.appendConsoleText(MESSAGE_STARS_NEWLINE);
 		guiController.gameEnd();
 	}
 
@@ -500,7 +510,7 @@ public class Game {
 		// third floor
 		Room corridor3 = new Room("You are in the corridor of the third floor", ItemEnum.NONE, ObstacleEnum.NONE);
 		Room meetingRoom31 = new Room("You are in the meeting room 3.1", ItemEnum.NONE, ObstacleEnum.NONE);
-		Room nextRoom = new Room("You are in the next room", ItemEnum.NONE, ObstacleEnum.NONE);
+		Room smallRoom = new Room("You are in the samll room", ItemEnum.NONE, ObstacleEnum.NONE);
 		Room breakRoom32 = new Room("You are in the break room", ItemEnum.NONE, ObstacleEnum.NONE);
 		Room emergencyStairwell = new Room("You have reached the emergency stairwell", ItemEnum.NONE,
 				ObstacleEnum.NONE);
@@ -527,14 +537,14 @@ public class Game {
 		corridor3.addExit(NORTH, breakRoom32);
 
 		meetingRoom31.addExit(EAST, corridor3);
-		meetingRoom31.addExit(NORTH, nextRoom);
+		meetingRoom31.addExit(NORTH, smallRoom);
 
 		secetariat.addExit(NORTH, corridor3);
 		secetariat.addExit(EAST, toilet33);
 
 		breakRoom32.addExit(SOUTH, corridor3);
 
-		nextRoom.addExit(SOUTH, meetingRoom31);
+		smallRoom.addExit(SOUTH, meetingRoom31);
 
 		// fourth floor
 		Room corridor4 = new Room("You are in the corridor of the fourth floor", ItemEnum.NONE, ObstacleEnum.NONE);
@@ -548,9 +558,9 @@ public class Game {
 		Room toilet44 = new Room("You are at the toilet 4.4", ItemEnum.SWORD, ObstacleEnum.NONE);
 
 		// exits
-		nextRoom.addExit(UP, office41); // third floor
+		smallRoom.addExit(UP, office41); // third floor
 
-		office41.addExit(DOWN, nextRoom);
+		office41.addExit(DOWN, smallRoom);
 		office41.addExit(SOUTH, fitnessRoom);
 
 		fitnessRoom.addExit(NORTH, office41);

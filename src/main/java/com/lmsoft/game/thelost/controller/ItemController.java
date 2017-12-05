@@ -16,7 +16,7 @@ import com.lmsoft.game.thelost.model.ItemEnum;
  */
 public class ItemController {
 
-	private final static Logger LOG = LogManager.getLogger(ItemController.class);
+	private static final Logger LOG = LogManager.getLogger(ItemController.class);
 
 	private List<ItemEnum> inventory;
 

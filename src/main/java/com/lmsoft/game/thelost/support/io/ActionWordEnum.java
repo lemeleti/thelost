@@ -26,7 +26,7 @@ public enum ActionWordEnum {
 
 	SHOW_ITEMS("showitems");
 
-	private final static Logger LOG = LogManager.getLogger(GameViewController.class);
+	private static final Logger LOG = LogManager.getLogger(GameViewController.class);
 
 	private final String actionCommand;
 

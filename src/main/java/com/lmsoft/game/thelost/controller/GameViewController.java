@@ -22,7 +22,7 @@ import javafx.scene.control.TextInputDialog;
  */
 public class GameViewController {
 
-	private final static Logger LOG = LogManager.getLogger(GameViewController.class);
+	private static final Logger LOG = LogManager.getLogger(GameViewController.class);
 
 	@FXML
 	private TextArea taConsole;
@@ -50,7 +50,7 @@ public class GameViewController {
 
 	@FXML
 	private void handleEnter() {
-		appendConsoleText(String.format("\n> %s\n", tfCommand.getText()));
+		appendConsoleText(String.format("%n> %s%n", tfCommand.getText()));
 
 		boolean finished = game.processCommand(parser.getCommand());
 		if (finished) {

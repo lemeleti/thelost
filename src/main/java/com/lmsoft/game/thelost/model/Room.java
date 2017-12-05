@@ -1,6 +1,6 @@
 package com.lmsoft.game.thelost.model;
 
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -40,7 +40,7 @@ public class Room {
 		this.description = description;
 		this.itemObject = item;
 		this.obstacleObject = obstacle;
-		exits = new HashMap<>();
+		exits = new EnumMap<>(DirectionEnum.class);
 	}
 
 	/**
@@ -59,22 +59,23 @@ public class Room {
 	 * @return {@link String}
 	 */
 	public String getLongDescription() {
-		return String.format("%s.\n%s", getDescription(), getExitsAsString());
+		return String.format("%s.%n%s", getDescription(), getExitsAsString());
 	}
 
 	private String getExitsAsString() {
-		StringBuffer buffer = new StringBuffer();
-		buffer.append("Exits:");
+		StringBuilder sb = new StringBuilder();
+
+		sb.append("Exits:");
 
 		Set<DirectionEnum> key = exits.keySet();
 		for (DirectionEnum exit : key) {
-			buffer.append(String.format(" %s,", exit.getDirection()));
+			sb.append(String.format(" %s,", exit.getDirection()));
 		}
 
-		int lastComma = buffer.lastIndexOf(",");
-		buffer.delete(lastComma, lastComma + 1);
+		int lastComma = sb.lastIndexOf(",");
+		sb.delete(lastComma, lastComma + 1);
 
-		return buffer.toString();
+		return sb.toString();
 	}
 
 	/**
